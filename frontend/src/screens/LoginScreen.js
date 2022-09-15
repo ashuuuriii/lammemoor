@@ -1,33 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import FormContainer from "../components/FormContainer";
+import Message from "../components/Message";
+import { login } from "../actions/userActions"
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const { search } = useLocation();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const redirect = search ? search.split("=")[1] : "/";
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo, error } = userLogin;
+
   const submitHandler = (e) => {
     e.preventDefault();
-    // TODO: dispatch login action here
+    dispatch(login(email, password));
   };
+
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfo, redirect]);
 
   return (
     <FormContainer>
-      <h2>Sign In</h2>
+      <h1>Sign In</h1>
+      {error && <Message variant="danger">{error}</Message>}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
         </Form.Group>
@@ -44,6 +59,7 @@ const LoginScreen = () => {
           <Form.Control
             type="password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
