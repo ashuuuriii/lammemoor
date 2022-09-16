@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
+import PasswordResetScreen from "./screens/PasswordResetScreen";
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
             <Route path="/" element={<HomeScreen />} exact />
             <Route path="/login/" element={<LoginScreen />} />
             <Route path="/register/" element={<RegistrationScreen />} />
+            <Route
+              path="/accounts/password_reset/"
+              element={<PasswordResetScreen />}
+            />
           </Routes>
         </Container>
       </main>
