@@ -6,4 +6,4 @@ RUN npm install npm@8.19.0
 RUN npm install
 
 COPY . .
-CMD ["npm", "run", "start"]
+EXPOSE 3000
