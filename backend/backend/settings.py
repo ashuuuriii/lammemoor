@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # third party apps
     'rest_framework',
     "corsheaders",
+    "django_rest_passwordreset",
     # local apps
     'accounts.apps.AccountsConfig',
 ]
@@ -66,7 +67,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -154,3 +155,5 @@ CORS_ALLOWED_ORIGINS = (
 )
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
