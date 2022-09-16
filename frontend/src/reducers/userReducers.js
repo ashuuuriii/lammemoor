@@ -6,6 +6,10 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_PASSWORD_RESET_REQUEST,
+  USER_PASSWORD_RESET_SUCCESS,
+  USER_PASSWORD_RESET_FAIL,
+  USER_PASSWORD_RESET_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -32,6 +36,21 @@ export const userRegisterReducer = (state = {}, action) => {
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };
     case USER_LOGOUT:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userPasswordResetReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PASSWORD_RESET_REQUEST:
+      return { loading: true };
+    case USER_PASSWORD_RESET_SUCCESS:
+      return { loading: false, success: true };
+    case USER_PASSWORD_RESET_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PASSWORD_RESET_RESET:
       return {};
     default:
       return state;
