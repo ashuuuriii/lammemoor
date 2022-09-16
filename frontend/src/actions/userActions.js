@@ -8,6 +8,9 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_PASSWORD_RESET_REQUEST,
+  USER_PASSWORD_RESET_SUCCESS,
+  USER_PASSWORD_RESET_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -96,3 +99,27 @@ export const register =
       });
     }
   };
+
+export const sendPasswordToken = (email) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_PASSWORD_RESET_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    await axios.post("/api/accounts/password_reset/", { email: email });
+
+    dispatch({ type: USER_PASSWORD_RESET_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_RESET_FAIL,
+      payload:
+        error.response && error.response.data.email // django-rest-passwordreset response
+          ? error.response.data.email
+          : error.message,
+    });
+  }
+};
