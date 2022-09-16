@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userLoginReducer } from "./reducers/userReducers";
+import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -8,10 +8,11 @@ const preloadedUserInfo = localStorage.getItem("userInfo")
 const store = configureStore({
   reducer: {
     userLogin: userLoginReducer,
+    userRegister: userRegisterReducer,
   },
   devTools: true,
   preloadedState: {
-    userLogin: {userInfo: preloadedUserInfo},
+    userLogin: { userInfo: preloadedUserInfo },
   },
 });
 
