@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
 
+import { register } from "../actions/userActions";
+
 const RegistrationScreen = () => {
+  const dispatch = useDispatch();
+  const { search } = useLocation();
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,14 +36,37 @@ const RegistrationScreen = () => {
         "Your password must contain at least one digit, one uppercase letter, and have a minimum length of 8 characters."
       );
     } else {
-      // TODO: add registration action here
+      dispatch(register(firstName, lastName, email, password));
     }
   };
+
+  const redirect = search ? search.split("=")[1] : "/";
+
+  // Prevent logged in users from accessing page
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [userInfo, redirect]);
+
+  // redirect users after registration
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, userInfo: userInfoRegistered, error } = userRegister;
+
+  useEffect(() => {
+    if (userInfoRegistered) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfoRegistered, redirect]);
 
   return (
     <FormContainer>
       <h1>Register</h1>
       {message && <Message variant="danger">{message}</Message>}
+      {error && <Message variant="danger">{error}</Message>}
       <Form onSubmit={submitHandler}>
         <Row>
           <Col>
