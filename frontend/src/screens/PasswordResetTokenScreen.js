@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { resetPassword } from "../actions/userActions";
+import { USER_PASSWORD_TOKEN_RESET } from "../constants/userConstants";
 
 const PasswordResetTokenScreen = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { search } = useLocation();
 
   const [password, setPassword] = useState("");
@@ -15,7 +20,7 @@ const PasswordResetTokenScreen = () => {
   const token = search ? search.split("=")[1] : null;
 
   const validatePassword = (password) => {
-    // Password must container at least one digit, one uppercase letter
+    // Password must contain at least one digit, one uppercase letter
     // and must have a minimum length of 8 characters
     const testStr = /^(?=.*\d)(?=.*[A-Z])(.{8,50})$/;
     return testStr.test(password);
@@ -30,15 +35,38 @@ const PasswordResetTokenScreen = () => {
         "Your password must contain at least one digit, one uppercase letter, and have a minimum length of 8 characters."
       );
     } else {
-      // TODO: dispatch password change action here
+      dispatch(resetPassword(token, password));
       setMessage("");
     }
   };
 
+  const userPasswordToken = useSelector((state) => state.userPasswordToken);
+  const { loading, success, error } = userPasswordToken;
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(function(){navigate("/login")}, 3000);
+    }
+  }, [success]);
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: USER_PASSWORD_TOKEN_RESET });
+    };
+  }, []);
+
   return (
     <FormContainer onSubmit={submitHandler}>
       <h1>Reset your password</h1>
+      {loading && <Loader />}
       {message && <Message variant="danger">{message}</Message>}
+      {error && <Message variant="danger">{error}</Message>}
+      {success && (
+        <Message variant="success">
+          Your password has been reset. <Link to="/login">Click here</Link> if
+          you're not redirected to the sign in page in a few seconds.
+        </Message>
+      )}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
@@ -61,7 +89,7 @@ const PasswordResetTokenScreen = () => {
           ></Form.Control>
         </Form.Group>
         <Button type="submit" variant="primary" className="my-3">
-          Register
+          Reset Password
         </Button>
       </Form>
     </FormContainer>
