@@ -3,6 +3,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from django.template.loader import render_to_string
+from backend import settings
 
 
 @receiver(reset_password_token_created)
@@ -15,9 +16,7 @@ def password_reset_token_created(
         "first_name": reset_password_token.user.first_name,
         "email": reset_password_token.user.email,
         "reset_password_url": "{}?token={}".format(
-            instance.request.build_absolute_uri(
-                reverse("password_reset:reset-password-confirm")
-            ),
+            settings.FRONT_END_BASE_URL + "accounts/password_reset/reset",
             reset_password_token.key,
         ),
     }

@@ -18,6 +18,9 @@ from datetime import timedelta
 env = Env()
 env.read_env()
 
+# Front-end base URL, used when sending links to end user. Needs to be domain name when deploying.
+FRONT_END_BASE_URL = "http://localhost:3000/"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
