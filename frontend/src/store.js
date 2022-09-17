@@ -3,6 +3,7 @@ import {
   userLoginReducer,
   userRegisterReducer,
   userPasswordResetReducer,
+  userPasswordTokenReducer,
 } from "./reducers/userReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
@@ -14,6 +15,7 @@ const store = configureStore({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userPasswordReset: userPasswordResetReducer,
+    userPasswordToken: userPasswordTokenReducer,
   },
   devTools: true,
   preloadedState: {
