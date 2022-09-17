@@ -11,6 +11,9 @@ import {
   USER_PASSWORD_RESET_REQUEST,
   USER_PASSWORD_RESET_SUCCESS,
   USER_PASSWORD_RESET_FAIL,
+  USER_PASSWORD_TOKEN_REQUEST,
+  USER_PASSWORD_TOKEN_SUCCESS,
+  USER_PASSWORD_TOKEN_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -118,6 +121,33 @@ export const sendPasswordToken = (email) => async (dispatch) => {
       type: USER_PASSWORD_RESET_FAIL,
       payload:
         error.response && error.response.data.email // django-rest-passwordreset response
+          ? error.response.data.email
+          : error.message,
+    });
+  }
+};
+
+export const resetPassword = (token, password) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_PASSWORD_TOKEN_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    await axios.post(`/api/accounts/password_reset/confirm/?token=${token}`, {
+      token: token,
+      password: password,
+    });
+
+    dispatch({ type: USER_PASSWORD_TOKEN_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_TOKEN_FAIL,
+      payload:
+        error.response && error.response.data.email
           ? error.response.data.email
           : error.message,
     });
