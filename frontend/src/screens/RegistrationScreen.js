@@ -29,7 +29,7 @@ const RegistrationScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setMessage("The passwords you have entered do not match.");
     } else if (!validatePassword(password)) {
       setMessage(
@@ -50,11 +50,11 @@ const RegistrationScreen = () => {
     if (userInfo) {
       navigate(redirect);
     }
-  }, [userInfo, redirect]);
+  }, [userInfo, redirect, navigate]);
 
   // redirect users after registration
   const userRegister = useSelector((state) => state.userRegister);
-  const { loading, userInfo: userInfoRegistered, error } = userRegister;
+  const { userInfo: userInfoRegistered, error } = userRegister;
 
   useEffect(() => {
     if (userInfoRegistered) {

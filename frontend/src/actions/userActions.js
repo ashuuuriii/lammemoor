@@ -113,7 +113,7 @@ export const sendPasswordToken = (email) => async (dispatch) => {
       },
     };
 
-    await axios.post("/api/accounts/password_reset/", { email: email });
+    await axios.post("/api/accounts/password_reset/", { email: email }, config);
 
     dispatch({ type: USER_PASSWORD_RESET_SUCCESS });
   } catch (error) {
@@ -137,10 +137,14 @@ export const resetPassword = (token, password) => async (dispatch) => {
       },
     };
 
-    await axios.post(`/api/accounts/password_reset/confirm/?token=${token}`, {
-      token: token,
-      password: password,
-    });
+    await axios.post(
+      `/api/accounts/password_reset/confirm/?token=${token}`,
+      {
+        token: token,
+        password: password,
+      },
+      config
+    );
 
     dispatch({ type: USER_PASSWORD_TOKEN_SUCCESS });
   } catch (error) {

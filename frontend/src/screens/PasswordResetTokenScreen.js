@@ -28,7 +28,7 @@ const PasswordResetTokenScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setMessage("The passwords you have entered do not match.");
     } else if (!validatePassword(password)) {
       setMessage(
@@ -47,13 +47,13 @@ const PasswordResetTokenScreen = () => {
     if (success) {
       setTimeout(function(){navigate("/login")}, 3000);
     }
-  }, [success]);
+  }, [success, navigate]);
 
   useEffect(() => {
     return () => {
       dispatch({ type: USER_PASSWORD_TOKEN_RESET });
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <FormContainer onSubmit={submitHandler}>

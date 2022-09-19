@@ -26,7 +26,7 @@ const PasswordResetScreen = () => {
     return () => {
       dispatch({ type: USER_PASSWORD_RESET_RESET });
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <FormContainer>
