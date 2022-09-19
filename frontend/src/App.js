@@ -9,6 +9,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
 import PasswordResetScreen from "./screens/PasswordResetScreen";
 import PasswordResetTokenScreen from "./screens/PasswordResetTokenScreen";
+import ProductListScreen from "./screens/ProductListScreen";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               path="/accounts/password_reset/reset"
               element={<PasswordResetTokenScreen />}
             />
+            <Route path="/shop/" element={<ProductListScreen />} />
           </Routes>
         </Container>
       </main>
