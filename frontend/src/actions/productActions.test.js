@@ -3,18 +3,21 @@ import moxios from "moxios";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
-import { getProductsList } from "./productActions";
+import { getProductsList, getProductDetails } from "./productActions";
 
 import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_FAIL,
+  PRODUCT_DETAILS_REQUEST,
+  PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DETAILS_FAIL,
 } from "../constants/productConstants";
 
 const mockStore = configureMockStore([thunk]);
 const initialState = { userInfo: null };
 
-describe("Test login action", () => {
+describe("Test getProductsList action", () => {
   let store;
 
   beforeEach(() => {
@@ -135,6 +138,103 @@ describe("Test login action", () => {
     ];
 
     return store.dispatch(getProductsList()).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test getProductDetails action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("product data succesfully returned", () => {
+    const expectedDetailData = [
+      {
+        id: 0,
+        name: "prod1",
+        image: "http://image-url/1",
+        pdf: "http://pdf-url/1",
+        category: 1,
+        description: "description",
+        rating: 3.5,
+        n_reviews: 6,
+        price: 12.75,
+        pdf_price: 10.0,
+        n_stock: 1,
+        created_at: "timestamp",
+        user: 1,
+      },
+    ];
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: [
+          {
+            id: 0,
+            name: "prod1",
+            image: "http://image-url/1",
+            pdf: "http://pdf-url/1",
+            category: 1,
+            description: "description",
+            rating: 3.5,
+            n_reviews: 6,
+            price: 12.75,
+            pdf_price: 10.0,
+            n_stock: 1,
+            created_at: "timestamp",
+            user: 1,
+          },
+        ],
+      });
+    });
+
+    const expectedActions = [
+      { type: PRODUCT_DETAILS_REQUEST },
+      {
+        type: PRODUCT_DETAILS_SUCCESS,
+        payload: expectedDetailData,
+      },
+    ];
+
+    return store.dispatch(getProductDetails(0)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("product data raises an error", () => {
+    const expectedDetailData = "Request failed with status code 404";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 404,
+        response: [
+          {
+            detail: "error",
+          },
+        ],
+      });
+    });
+
+    const expectedActions = [
+      { type: PRODUCT_DETAILS_REQUEST },
+      {
+        type: PRODUCT_DETAILS_FAIL,
+        payload: expectedDetailData,
+      },
+    ];
+
+    return store.dispatch(getProductDetails(0)).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });
