@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Row } from "react-bootstrap";
 
 const CartAdder = ({ product }) => {
   const defaultItemType = product.n_stock > 0 ? "paper" : "pdf";
@@ -63,9 +63,18 @@ const CartAdder = ({ product }) => {
           ))}
         </Form.Control>
       </Form.Group>
-      <Button type="submit" variant="primary" className="my-3">
+      <Button
+        type="submit"
+        variant="primary"
+        className="my-3 btn d-none d-lg-block"
+      >
         Add to cart
       </Button>
+      <Row className="d-lg-none d-block mx-0">
+        <Button type="submit" variant="primary" className="my-3">
+          Add to cart
+        </Button>
+      </Row>
     </Form>
   );
 };

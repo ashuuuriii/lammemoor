@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
-import { login } from "../actions/userActions"
+import { login } from "../actions/userActions";
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,6 @@ const LoginScreen = () => {
     e.preventDefault();
     dispatch(login(email, password));
   };
-
 
   useEffect(() => {
     if (userInfo) {
@@ -63,9 +62,18 @@ const LoginScreen = () => {
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" variant="primary" className="my-3">
+        <Button
+          type="submit"
+          variant="primary"
+          className="my-3 btn d-none d-lg-block"
+        >
           Sign In
         </Button>
+        <Row className="d-lg-none d-block mx-0">
+          <Button type="submit" variant="primary" className="my-3">
+            Sign In
+          </Button>
+        </Row>
       </Form>
       <Row className="py-3">
         <Col>

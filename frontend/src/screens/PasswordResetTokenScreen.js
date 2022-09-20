@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
@@ -45,7 +45,9 @@ const PasswordResetTokenScreen = () => {
 
   useEffect(() => {
     if (success) {
-      setTimeout(function(){navigate("/login")}, 3000);
+      setTimeout(function () {
+        navigate("/login");
+      }, 3000);
     }
   }, [success, navigate]);
 
@@ -88,9 +90,18 @@ const PasswordResetTokenScreen = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" variant="primary" className="my-3">
+        <Button
+          type="submit"
+          variant="primary"
+          className="my-3 btn d-none d-lg-block"
+        >
           Reset Password
         </Button>
+        <Row className="d-lg-none d-block mx-0">
+          <Button type="submit" variant="primary" className="my-3">
+            Reset Password
+          </Button>
+        </Row>
       </Form>
     </FormContainer>
   );
