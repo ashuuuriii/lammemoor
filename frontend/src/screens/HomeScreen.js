@@ -23,10 +23,10 @@ const HomeScreen = () => {
             <Button className="btn btn-secondary btn-lg mb-4">Shop Now</Button>
           </LinkContainer>
         </Col>
-        <Col className="col-md-5 text-center d-none d-md-block">
+        <Col className="text-center d-md-block" sm={12} md={12} lg={5}>
           <Image
             src={fashion}
-            className="fluid"
+            fluid
             alt="Fashion, Journal de Demoiselles, 1858."
           ></Image>
         </Col>
