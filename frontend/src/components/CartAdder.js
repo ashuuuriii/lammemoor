@@ -20,6 +20,8 @@ const CartAdder = ({ product }) => {
     console.log(product.id);
   };
 
+  console.log(product.n_stock);
+
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group>
@@ -45,7 +47,7 @@ const CartAdder = ({ product }) => {
           id="pdf"
           onChange={handleRadioSelect}
           disabled={!product.pdf_price}
-          defaultChecked={product.n_stock <= 0}
+          defaultChecked={product.n_stock === 0 && product.pdf_price}
         ></Form.Check>
       </Form.Group>
       <Form.Group>
@@ -67,6 +69,7 @@ const CartAdder = ({ product }) => {
         type="submit"
         variant="primary"
         className="my-3 btn d-none d-lg-block"
+        disabled={!product.pdf_price && product.n_stock === 0}
       >
         Add to cart
       </Button>
