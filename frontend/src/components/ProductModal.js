@@ -32,7 +32,7 @@ const ProductModal = ({ product }) => {
           )}
           <p>{product.description}</p>
           <h3>Purchase Options</h3>
-          <CartAdder productId={product.id} />
+          <CartAdder product={product} />
         </Modal.Body>
       </Modal>
     </>

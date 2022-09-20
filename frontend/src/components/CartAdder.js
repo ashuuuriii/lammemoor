@@ -1,40 +1,67 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const CartAdder = ({ productId }) => {
-  const [itemType, setItemType] = useState("paper");
+const CartAdder = ({ product }) => {
+  const defaultItemType = product.n_stock > 0 ? "paper" : "pdf";
+  const [itemType, setItemType] = useState(defaultItemType);
   const [qty, setQty] = useState(1);
 
-  const handleRadioSelect = (e) => {
-    setItemType(e.target.id);
-  };
+  let qtyArr = [];
+  for (let i = 1; i <= product.n_stock; i++) {
+    qtyArr.push(i);
+  }
+
+  const handleRadioSelect = (e) => setItemType(e.target.id);
 
   const submitHandler = (e) => {
     e.preventDefault();
     // TODO: replace with add to cart action.
     console.log("added to cart");
-    console.log(productId);
+    console.log(product.id);
   };
 
-  // TODO: add quantity selector, disable choices depending on availibility
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group>
         <Form.Check
           type="radio"
-          label="Paper Pattern"
+          label={`Paper Pattern - $${product.price} (${
+            product.n_stock > 0
+              ? product.n_stock + " in stock"
+              : "None in stock"
+          })`}
           name="pattern-choice"
           id="paper"
           onChange={handleRadioSelect}
-          defaultChecked
+          disabled={product.n_stock <= 0}
+          defaultChecked={product.n_stock > 0}
         ></Form.Check>
         <Form.Check
           type="radio"
-          label="E-Pattern"
+          label={`E-Pattern - ${
+            product.pdf_price ? "$" + product.pdf_price : "not available"
+          }`}
           name="pattern-choice"
           id="pdf"
           onChange={handleRadioSelect}
+          disabled={!product.pdf_price}
+          defaultChecked={product.n_stock <= 0}
         ></Form.Check>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Quantity</Form.Label>
+        <Form.Control
+          as="select"
+          value={qty}
+          onChange={(e) => setQty(e.target.value)}
+          disabled={itemType === "pdf"}
+        >
+          {qtyArr.map((x) => (
+            <option value={x} key={x}>
+              {x}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
       <Button type="submit" variant="primary" className="my-3">
         Add to cart
