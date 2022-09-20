@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Row } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 import CartAdder from "./CartAdder";
 

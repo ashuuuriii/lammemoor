@@ -18,7 +18,7 @@ const ProductDetailScreen = () => {
 
   useEffect(() => {
     dispatch(getProductDetails(productId));
-  }, []);
+  }, [dispatch, productId]);
 
   // TODO: add reviews section
   return (
