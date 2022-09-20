@@ -5,7 +5,10 @@ import {
   userPasswordResetReducer,
   userPasswordTokenReducer,
 } from "./reducers/userReducers";
-import { productListReducer } from "./reducers/productReducers";
+import {
+  productListReducer,
+  productDetailsReducer,
+} from "./reducers/productReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -18,6 +21,7 @@ const store = configureStore({
     userPasswordReset: userPasswordResetReducer,
     userPasswordToken: userPasswordTokenReducer,
     productList: productListReducer,
+    productDetails: productDetailsReducer,
   },
   devTools: true,
   preloadedState: {
