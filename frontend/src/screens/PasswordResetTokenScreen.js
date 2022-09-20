@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row } from "react-bootstrap";
+import { Form, Button, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
@@ -72,13 +72,22 @@ const PasswordResetTokenScreen = () => {
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            required
-            type="password"
-            placeholder="Please include at least one digit, one uppercase letter, at least 8 characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={
+              <Tooltip>
+                Please include at least one digit, one uppercase letter, at
+                least 8 characters
+              </Tooltip>
+            }
+          >
+            <Form.Control
+              required
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></Form.Control>
+          </OverlayTrigger>
         </Form.Group>
 
         <Form.Group controlId="passwordConfirm">
