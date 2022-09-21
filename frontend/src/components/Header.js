@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,6 +17,18 @@ const Header = () => {
     dispatch(logout());
     navigate("/");
   };
+
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+  const [cartFull, setCartFull] = useState(false);
+
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      setCartFull(false);
+    } else {
+      setCartFull(true);
+    }
+  }, [cartItems]);
 
   return (
     <header>
@@ -50,7 +62,12 @@ const Header = () => {
             <Nav>
               <LinkContainer to="/cart">
                 <Nav.Link>
-                  <i className="bi bi-cart"></i>Cart
+                  {cartFull ? (
+                    <i className="bi bi-cart-fill"></i>
+                  ) : (
+                    <i className="bi bi-cart"></i>
+                  )}
+                  Cart
                 </Nav.Link>
               </LinkContainer>
               {userInfo ? (
