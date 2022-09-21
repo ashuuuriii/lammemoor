@@ -16,27 +16,7 @@ const CartScreen = () => {
       </Col>
       <Col md={4}>
         <Row>
-          <Card>
-            <Card.Header>
-              <h3>Cart Totals</h3>
-            </Card.Header>
-            <Card.Body>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <strong>Subtotal: </strong>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>VAT: </strong>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Shipping: </strong>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card.Body>
-            <Card.Footer>
-              <h4>Total: </h4>
-            </Card.Footer>
-          </Card>
+          <PriceCard />
         </Row>
         <Row>
           <Button type="button" className="my-3" onCLick={checkoutHandler}>
