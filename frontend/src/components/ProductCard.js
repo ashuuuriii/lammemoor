@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
     <Card className="my-3 p-3" style={{ height: "100%" }}>
       <Link to={`/product/${product.id}`}>
         <div className="image-holder">
-           <Card.Img src={product.image} alt={product.name} /> 
+          <Card.Img src={product.image} alt={product.name} />
         </div>
       </Link>
       <Card.Body>
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
         <Card.Title>{product.name}</Card.Title>
         {product.pdf_price ? (
           <Card.Text>
-            ${product.pdf_price} - ${product.price}
+            £{product.pdf_price} - £{product.price}
           </Card.Text>
         ) : (
           <Card.Text>${product.price}</Card.Text>
