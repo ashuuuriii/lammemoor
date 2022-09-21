@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { Button, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+
+import { addToCart } from "../actions/cartActions";
+import Message from "./Message";
 
 const CartAdder = ({ product }) => {
+  const dispatch = useDispatch();
+
   const defaultItemType = product.n_stock > 0 ? "paper" : "pdf";
   const [itemType, setItemType] = useState(defaultItemType);
   const [qty, setQty] = useState(1);
+  const [message, setMessage] = useState("");
 
   let qtyArr = [];
   for (let i = 1; i <= product.n_stock; i++) {
@@ -15,19 +22,20 @@ const CartAdder = ({ product }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // TODO: replace with add to cart action.
-    console.log("added to cart");
-    console.log(product.id);
+    dispatch(addToCart(product.id, qty, itemType)).then(() => {
+      setMessage("Item has been added to cart.");
+      setTimeout(function () {
+        setMessage("");
+      }, 3000);
+    });
   };
-
-  console.log(product.n_stock);
 
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group>
         <Form.Check
           type="radio"
-          label={`Paper Pattern - $${product.price} (${
+          label={`Paper Pattern - £${product.price} (${
             product.n_stock > 0
               ? product.n_stock + " in stock"
               : "None in stock"
@@ -41,7 +49,7 @@ const CartAdder = ({ product }) => {
         <Form.Check
           type="radio"
           label={`E-Pattern - ${
-            product.pdf_price ? "$" + product.pdf_price : "not available"
+            product.pdf_price ? "£" + product.pdf_price : "not available"
           }`}
           name="pattern-choice"
           id="pdf"
@@ -78,6 +86,7 @@ const CartAdder = ({ product }) => {
           Add to cart
         </Button>
       </Row>
+      {message && <Message variant="success">{message}</Message>}
     </Form>
   );
 };
