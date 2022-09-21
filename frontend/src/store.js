@@ -15,6 +15,10 @@ const preloadedUserInfo = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
+const cartItemsFromLocalStoreage = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems"))
+  : [];
+
 const store = configureStore({
   reducer: {
     userLogin: userLoginReducer,
@@ -28,6 +32,7 @@ const store = configureStore({
   devTools: true,
   preloadedState: {
     userLogin: { userInfo: preloadedUserInfo },
+    cart: { cartItems: cartItemsFromLocalStoreage },
   },
 });
 
