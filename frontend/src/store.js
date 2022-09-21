@@ -9,6 +9,7 @@ import {
   productListReducer,
   productDetailsReducer,
 } from "./reducers/productReducers";
+import { cartReducer } from "./reducers/cartReducer";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -22,6 +23,7 @@ const store = configureStore({
     userPasswordToken: userPasswordTokenReducer,
     productList: productListReducer,
     productDetails: productDetailsReducer,
+    cart: cartReducer,
   },
   devTools: true,
   preloadedState: {
