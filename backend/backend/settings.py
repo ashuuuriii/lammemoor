@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     "django_rest_passwordreset",
+    "phonenumber_field",
     # local apps
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
