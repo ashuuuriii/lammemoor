@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, ListGroup, Button, Image, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Message from "../components/Message";
 import PriceCard from "../components/PriceCard";
@@ -9,13 +9,20 @@ import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const checkoutHandler = () => {
-    console.log("checkout");
-    // TODO: dispatch order action here
+    if (!userInfo) {
+      navigate("/login?redirect=/cart");
+    } else {
+      navigate("/order");
+    }
   };
 
   const removeItemHandler = (id) => {
