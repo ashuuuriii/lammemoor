@@ -12,6 +12,7 @@ import PasswordResetTokenScreen from "./screens/PasswordResetTokenScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductDetailScreen from "./screens/ProductDetailScreen";
 import CartScreen from "./screens/CartScreen";
+import OrderScreen from "./screens/OrderScreen";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
             <Route path="/shop/" element={<ProductListScreen />} />
             <Route path="/product/:id" element={<ProductDetailScreen />} />
             <Route path="/cart/" element={<CartScreen />} />
-            <Route path="/cart/:id" element={<CartScreen />} />
+            <Route path="/order/" element={<OrderScreen />} />
           </Routes>
         </Container>
       </main>
