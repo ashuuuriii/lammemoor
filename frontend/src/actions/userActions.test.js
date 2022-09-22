@@ -9,6 +9,7 @@ import {
   register,
   sendPasswordToken,
   resetPassword,
+  updateUserDetails,
 } from "../actions/userActions";
 
 import {
@@ -25,6 +26,9 @@ import {
   USER_PASSWORD_TOKEN_REQUEST,
   USER_PASSWORD_TOKEN_SUCCESS,
   USER_PASSWORD_TOKEN_FAIL,
+  USER_UPDATE_DETAILS_REQUEST,
+  USER_UPDATE_DETAILS_SUCCESS,
+  USER_UPDATE_DETAILS_FAIL,
 } from "../constants/userConstants";
 
 const mockStore = configureMockStore([thunk]);
@@ -297,68 +301,104 @@ describe("Test send password token action", () => {
   });
 });
 
-describe("Test password reset action", () => {
+describe("Test updateUserDetails action", () => {
   let store;
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    store = mockStore({ userLogin: { userInfo: "token123" } });
     moxios.install();
   });
   afterEach(() => {
     moxios.uninstall();
+    localStorage.clear();
   });
 
-  it("password has been successfully reset", () => {
+  it("user details have been successfully reset", () => {
+    const expectedUserData = {
+      id: 1,
+      first_name: "John",
+      last_name: "Doe",
+      email: "test@example.com",
+      token: "token123",
+    };
+    jest.spyOn(window.localStorage.__proto__, "setItem");
+
     moxios.wait(function () {
       let request = moxios.requests.mostRecent();
       request.respondWith({
         status: 200,
-        response: [
-          {
-            status: "ok",
-          },
-        ],
+        response: {
+          id: 1,
+          first_name: "John",
+          last_name: "Doe",
+          email: "test@example.com",
+          token: "token123",
+        },
       });
     });
 
     const expectedActions = [
-      { type: USER_PASSWORD_TOKEN_REQUEST },
+      { type: USER_UPDATE_DETAILS_REQUEST },
       {
-        type: USER_PASSWORD_TOKEN_SUCCESS,
+        type: USER_UPDATE_DETAILS_SUCCESS,
+        payload: expectedUserData,
       },
+      { type: USER_LOGIN_SUCCESS, payload: expectedUserData },
     ];
 
-    return store.dispatch(resetPassword("token123", "Password123")).then(() => {
-      const actualActions = store.getActions();
-      expect(actualActions).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(
+        updateUserDetails({
+          id: 1,
+          first_name: "John",
+          last_name: "Doe",
+          email: "test@example.com",
+          password: "",
+        })
+      )
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+        expect(localStorage.setItem).toHaveBeenCalledWith(
+          "userInfo",
+          JSON.stringify(expectedUserData)
+        );
+      });
   });
 
-  it("invalid token raises an error", () => {
-    const expectedResetData = "Request failed with status code 404";
+  it("email already exists raises an error", () => {
+    const expectedUserData = "error";
     moxios.wait(function () {
       let request = moxios.requests.mostRecent();
       request.respondWith({
-        status: 404,
-        response: [
-          {
-            detail: "error",
-          },
-        ],
+        status: 500,
+        response: {
+          detail: "error",
+        },
       });
     });
 
     const expectedActions = [
-      { type: USER_PASSWORD_TOKEN_REQUEST },
+      { type: USER_UPDATE_DETAILS_REQUEST },
       {
-        type: USER_PASSWORD_TOKEN_FAIL,
-        payload: expectedResetData,
+        type: USER_UPDATE_DETAILS_FAIL,
+        payload: expectedUserData,
       },
     ];
 
-    return store.dispatch(resetPassword("token123", "Password123")).then(() => {
-      const actualActions = store.getActions();
-      expect(actualActions).toEqual(expectedActions);
-    });
+    return store
+      .dispatch(
+        updateUserDetails({
+          id: 1,
+          first_name: "John",
+          last_name: "Doe",
+          email: "test@example.com",
+          password: "",
+        })
+      )
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+      });
   });
 });
