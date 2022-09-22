@@ -76,7 +76,7 @@ const RegistrationScreen = () => {
       {error && <Message variant="danger">{error}</Message>}
       <Form onSubmit={submitHandler}>
         <Row>
-          <Col>
+          <Col md={6}>
             <Form.Group controlId="firstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
@@ -88,7 +88,7 @@ const RegistrationScreen = () => {
             </Form.Group>
           </Col>
 
-          <Col>
+          <Col md={6}>
             <Form.Group controlId="lastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
@@ -140,9 +140,18 @@ const RegistrationScreen = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" variant="primary" className="my-3">
+        <Button
+          type="submit"
+          variant="primary"
+          className="my-3 btn d-none d-lg-block"
+        >
           Register
         </Button>
+        <Row className="d-lg-none d-block mx-0">
+          <Button type="submit" variant="primary" className="my-3">
+            Register
+          </Button>
+        </Row>
       </Form>
     </FormContainer>
   );
