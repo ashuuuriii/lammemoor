@@ -76,7 +76,7 @@ const Header = () => {
                     <div>Hello,</div>
                     <div className="lead">{userInfo.first_name}</div>
                   </NavDropdown.Header>
-                  <LinkContainer to="/accounts">
+                  <LinkContainer to="/accounts/manage">
                     <NavDropdown.Item>Your Account</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/accounts/orders">
