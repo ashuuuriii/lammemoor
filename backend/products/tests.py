@@ -19,7 +19,7 @@ class ProductViewSetTest(TestCase):
         self.product = Product.objects.create(
             user=self.user,
             name="Product Name",
-            category="Category",
+            category=1,
             description="Description",
             rating=3.5,
             n_reviews=5,
