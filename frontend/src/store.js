@@ -4,6 +4,7 @@ import {
   userRegisterReducer,
   userPasswordResetReducer,
   userPasswordTokenReducer,
+  userUpdateDetailsReducer,
 } from "./reducers/userReducers";
 import {
   productListReducer,
@@ -25,6 +26,7 @@ const store = configureStore({
     userRegister: userRegisterReducer,
     userPasswordReset: userPasswordResetReducer,
     userPasswordToken: userPasswordTokenReducer,
+    userUpdateDetails: userUpdateDetailsReducer,
     productList: productListReducer,
     productDetails: productDetailsReducer,
     cart: cartReducer,

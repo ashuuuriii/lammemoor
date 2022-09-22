@@ -5,6 +5,7 @@ import {
   userRegisterReducer,
   userPasswordResetReducer,
   userPasswordTokenReducer,
+  userUpdateDetailsReducer,
 } from "../reducers/userReducers";
 import {
   USER_LOGIN_REQUEST,
@@ -22,6 +23,10 @@ import {
   USER_PASSWORD_TOKEN_SUCCESS,
   USER_PASSWORD_TOKEN_FAIL,
   USER_PASSWORD_TOKEN_RESET,
+  USER_UPDATE_DETAILS_REQUEST,
+  USER_UPDATE_DETAILS_SUCCESS,
+  USER_UPDATE_DETAILS_FAIL,
+  USER_UPDATE_DETAILS_RESET,
 } from "../constants/userConstants";
 
 const initialState = { userInfo: null };
@@ -205,6 +210,58 @@ describe("Test userPasswordTokenReducer", () => {
 
     const reducer = userPasswordTokenReducer(state, {
       type: USER_PASSWORD_TOKEN_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test userUpdateDetailsReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = {};
+  });
+
+  it("test USER_UPDATE_DETAILS_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = userUpdateDetailsReducer(state, {
+      type: USER_UPDATE_DETAILS_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_UPDATE_DETAILS_SUCCESS", () => {
+    const expectedData = "success data";
+    const expectedState = {
+      loading: false,
+      success: true,
+      userInfo: expectedData,
+    };
+
+    const reducer = userUpdateDetailsReducer(state, {
+      type: USER_UPDATE_DETAILS_SUCCESS,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test UUSER_UPDATE_DETAILS_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = userUpdateDetailsReducer(state, {
+      type: USER_UPDATE_DETAILS_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_UPDATE_DETAILS_RESET", () => {
+    const expectedState = {};
+
+    const reducer = userUpdateDetailsReducer(state, {
+      type: USER_UPDATE_DETAILS_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });
