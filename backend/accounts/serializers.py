@@ -3,6 +3,8 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from .models import ShippingAddress
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,3 +42,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data[k] = v
 
         return data
+
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingAddress
+        fields = "__all__"
