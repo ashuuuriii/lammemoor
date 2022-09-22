@@ -5,6 +5,8 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from .models import ShippingAddress
+
 
 class UserRegistraionViewTest(TestCase):
     def test_api_createview_post(self):
@@ -165,3 +167,50 @@ class UserDetailViewTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.staff_user)
+
+
+class ShippingAddressViewsetTest(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create(
+            username="username@email.com",
+            password=make_password("Password123"),
+            first_name="First",
+            last_name="Last",
+            email="username@email.com",
+        )
+        self.staff_user = get_user_model().objects.create_superuser(
+            username="staff@email.com",
+            password=make_password("Password123"),
+            first_name="First",
+            last_name="Last",
+            email="staff@email.com",
+        )
+
+        self.shipping_address = ShippingAddress.objects.create(
+            user=self.user,
+            first_name="First",
+            last_name="Last",
+            address="street",
+            city="City",
+            postal_code="123 456",
+            country="country",
+            in_address_book=True,
+        )
+        self.client = APIClient()
+
+    def test_list_view(self):
+        # test anon user
+        response = self.client.get(reverse("addresses-list"))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # test user
+        self.client.force_authenticate(self.user)
+        response = self.client.get(reverse("addresses-list"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, self.shipping_address)
+
+        # test staff user
+        self.client.force_authenticate(self.staff_user)
+        response = self.client.get(reverse("addresses-list"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, self.shipping_address)

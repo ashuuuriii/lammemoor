@@ -19,10 +19,10 @@ class ShippingAddress(models.Model):
     first_name = models.CharField(max_length=150, blank=False, null=False)
     last_name = models.CharField(max_length=150, blank=False, null=False)
     phone_number = PhoneNumberField(null=True, blank=True)
-    address = models.CharField(max_length=200, null=True, blank=True)
-    city = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=False, blank=False)
+    city = models.CharField(max_length=200, null=False, blank=False)
     postal_code = models.CharField(max_length=200, null=True, blank=True)
-    country = models.CharField(max_length=200, null=True, blank=True)
+    country = models.CharField(max_length=200, null=False, blank=False)
     in_address_book = models.BooleanField()
 
     def __str__(self):

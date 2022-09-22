@@ -9,7 +9,9 @@ from .serializers import (
     CustomTokenObtainPairSerializer,
     CustomUserSerializerWithToken,
     CustomUserSerializer,
+    ShippingAddressSerializer,
 )
+from .models import ShippingAddress
 from .permissions import IsStaffOrOwnerOnly
 
 
@@ -63,3 +65,17 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         except IntegrityError as e:
             message = "A user with that email already exists."
             return Response({"detail": message}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ShippingAddressViewset(viewsets.ModelViewSet):
+    serializer_class = ShippingAddressSerializer
+    queryset = ShippingAddress.objects.all()
+    permission_classes = (IsStaffOrOwnerOnly,)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        if request.user.is_staff:
+            addresses = ShippingAddress.objects.all()
+        else:
+            addresses = user.shippingaddress_set.all()
+        return Response(self.serializer_class(addresses, many=True).data)
