@@ -10,6 +10,7 @@ import RegistrationScreen from "./screens/RegistrationScreen";
 import PasswordResetScreen from "./screens/PasswordResetScreen";
 import PasswordResetTokenScreen from "./screens/PasswordResetTokenScreen"
 import ManageAccountScreen from "./screens/ManageAccountScreen";
+import EditAddressScreen from "./screens/EditAddressScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductDetailScreen from "./screens/ProductDetailScreen";
 import CartScreen from "./screens/CartScreen";
@@ -34,6 +35,7 @@ function App() {
               element={<PasswordResetTokenScreen />}
             />
             <Route path="accounts/manage/" element={<ManageAccountScreen />} />
+            <Route path="edit_address/:id" element={<EditAddressScreen />} />
             <Route path="/shop/" element={<ProductListScreen />} />
             <Route path="/product/:id" element={<ProductDetailScreen />} />
             <Route path="/cart/" element={<CartScreen />} />
