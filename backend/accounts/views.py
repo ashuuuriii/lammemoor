@@ -126,6 +126,7 @@ class RemoveFromAddressBookView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         address = ShippingAddress.objects.get(id=kwargs.get("pk"))
         address.in_address_book = request.data["in_address_book"]
+        address.save()
         return Response(
             {"detail": "address visibility updated"}, status.HTTP_202_ACCEPTED
         )
