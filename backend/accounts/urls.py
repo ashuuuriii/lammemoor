@@ -7,6 +7,7 @@ from .views import (
     UserListView,
     UserDetailView,
     ShippingAddressViewset,
+    RemoveFromAddressBookView,
 )
 
 
@@ -18,4 +19,9 @@ urlpatterns = [
     path("register", UserRegistrationView.as_view(), name="register"),
     path("list_users", UserListView.as_view(), name="list_users"),
     path("user_detail/<str:pk>", UserDetailView.as_view(), name="user_detail"),
+    path(
+        "addresses/remove/<str:pk>",
+        RemoveFromAddressBookView.as_view(),
+        name="remove_address",
+    ),
 ] + router.urls

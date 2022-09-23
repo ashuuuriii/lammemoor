@@ -236,3 +236,68 @@ class ShippingAddressViewsetTest(TestCase):
         self.client.force_authenticate(self.user)
         response = self.client.post(reverse("addresses-list"), new_address)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_update_view(self):
+        update_address = {
+            "first_name": "Update",
+            "last_name": "Doe",
+            "address": "address",
+            "city": "city",
+            "country": "country",
+            "in_address_book": True,
+            "postal_code": "123 456",
+            "phone_number": "9283124801",
+        }
+        # test anon user
+        response = self.client.put(
+            reverse("addresses-detail", kwargs={"pk": self.shipping_address.id}),
+            update_address,
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # test address user
+        self.client.force_authenticate(self.user)
+        response = self.client.put(
+            reverse("addresses-detail", kwargs={"pk": self.shipping_address.id}),
+            update_address,
+        )
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+
+class RemoveFromAddressBookViewTest(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create(
+            username="username@email.com",
+            password=make_password("Password123"),
+            first_name="First",
+            last_name="Last",
+            email="username@email.com",
+        )
+
+        self.shipping_address = ShippingAddress.objects.create(
+            user=self.user,
+            first_name="First",
+            last_name="Last",
+            address="street",
+            city="City",
+            postal_code="123 456",
+            country="country",
+            in_address_book=True,
+        )
+        self.client = APIClient()
+
+    def test_api_update(self):
+        # test anon user
+        response = self.client.put(
+            reverse("remove_address", kwargs={"pk": self.shipping_address.id}),
+            {"in_address_book": False},
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # test address user
+        self.client.force_authenticate(self.user)
+        response = self.client.put(
+            reverse("remove_address", kwargs={"pk": self.shipping_address.id}),
+            {"in_address_book": False},
+        )
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)

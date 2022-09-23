@@ -100,3 +100,32 @@ class ShippingAddressViewset(viewsets.ModelViewSet):
         return Response(
             {"detail": "new address added successfully"}, status.HTTP_201_CREATED
         )
+
+    def update(self, request, *args, **kwargs):
+        data = request.data
+        address = ShippingAddress.objects.get(id=kwargs.get("pk"))
+        address.first_name = data["first_name"]
+        address.last_name = data["last_name"]
+        address.address = data["address"]
+        address.city = data["city"]
+        address.country = data["country"]
+        address.in_address_book = data["in_address_book"]
+        if data["postal_code"] != "":
+            address.postal_code = data["postal_code"]
+        if data["phone_number"] != "":
+            address.phone_number = data["phone_number"]
+        address.save()
+        return Response({"detail": "address updated"}, status.HTTP_202_ACCEPTED)
+
+
+class RemoveFromAddressBookView(generics.UpdateAPIView):
+    serializer_class = ShippingAddressSerializer
+    queryset = ShippingAddress.objects.all()
+    permission_classes = (IsStaffOrOwnerOnly,)
+
+    def update(self, request, *args, **kwargs):
+        address = ShippingAddress.objects.get(id=kwargs.get("pk"))
+        address.in_address_book = request.data["in_address_book"]
+        return Response(
+            {"detail": "address visibility updated"}, status.HTTP_202_ACCEPTED
+        )
