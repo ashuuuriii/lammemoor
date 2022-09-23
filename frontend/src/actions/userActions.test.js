@@ -14,6 +14,7 @@ import {
   addNewAddress,
   getUserAddressDetail,
   updateAddress,
+  removeAddress
 } from "../actions/userActions";
 
 import {
@@ -40,12 +41,16 @@ import {
   USER_GET_ADDRESS_DETAIL_REQUEST,
   USER_GET_ADDRESS_DETAIL_SUCCESS,
   USER_GET_ADDRESS_DETAIL_FAIL,
+  USER_GET_ADDRESS_DETAIL_RESET,
   USER_ADD_ADDRESS_REQUEST,
   USER_ADD_ADDRESS_SUCCESS,
   USER_ADD_ADDRESS_FAIL,
   USER_UPDATE_ADDRESS_REQUEST,
   USER_UPDATE_ADDRESS_SUCCESS,
   USER_UPDATE_ADDRESS_FAIL,
+  USER_REMOVE_ADDRESS_REQUEST,
+  USER_REMOVE_ADDRESS_SUCCESS,
+  USER_REMOVE_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 const mockStore = configureMockStore([thunk]);
@@ -163,6 +168,7 @@ describe("Test logout action", () => {
     const expectedActions = [
       { type: USER_LOGOUT },
       { type: USER_GET_ADDRESSES_RESET },
+      { type: USER_GET_ADDRESS_DETAIL_RESET },
     ];
     jest.spyOn(window.localStorage.__proto__, "removeItem");
 
@@ -704,6 +710,72 @@ describe("Test updateAddress action", () => {
     ];
 
     return store.dispatch(updateAddress(1, { address: "address" })).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test removeAddress action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({ userLogin: { userInfo: "token123" } });
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("address book successfully updated", () => {
+    const expectedAddressData = {
+      detail: "updated",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 202,
+        response: {
+          detail: "updated",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_REMOVE_ADDRESS_REQUEST },
+      {
+        type: USER_REMOVE_ADDRESS_SUCCESS,
+      },
+    ];
+
+    return store.dispatch(removeAddress(1, false)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("PUT request for another user's data", () => {
+    const expectedAddressData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 401,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_REMOVE_ADDRESS_REQUEST },
+      {
+        type: USER_REMOVE_ADDRESS_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(removeAddress(1, false)).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });

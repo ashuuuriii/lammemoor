@@ -24,12 +24,16 @@ import {
   USER_GET_ADDRESS_DETAIL_REQUEST,
   USER_GET_ADDRESS_DETAIL_SUCCESS,
   USER_GET_ADDRESS_DETAIL_FAIL,
+  USER_GET_ADDRESS_DETAIL_RESET,
   USER_ADD_ADDRESS_REQUEST,
   USER_ADD_ADDRESS_SUCCESS,
   USER_ADD_ADDRESS_FAIL,
   USER_UPDATE_ADDRESS_REQUEST,
   USER_UPDATE_ADDRESS_SUCCESS,
   USER_UPDATE_ADDRESS_FAIL,
+  USER_REMOVE_ADDRESS_REQUEST,
+  USER_REMOVE_ADDRESS_SUCCESS,
+  USER_REMOVE_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -73,6 +77,7 @@ export const logout = () => (dispatch) => {
     type: USER_LOGOUT,
   });
   dispatch({ type: USER_GET_ADDRESSES_RESET });
+  dispatch({ type: USER_GET_ADDRESS_DETAIL_RESET });
 };
 
 export const register =
@@ -352,3 +357,41 @@ export const updateAddress = (id, address) => async (dispatch, getState) => {
     });
   }
 };
+
+export const removeAddress =
+  (id, inAddressBook) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_REMOVE_ADDRESS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      await axios.put(
+        `/api/accounts/addresses/remove/${id}`,
+        { in_address_book: inAddressBook },
+        config
+      );
+
+      dispatch({
+        type: USER_REMOVE_ADDRESS_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_REMOVE_ADDRESS_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };
