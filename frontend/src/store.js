@@ -6,6 +6,8 @@ import {
   userPasswordTokenReducer,
   userUpdateDetailsReducer,
   userShippingAddressReducer,
+  userAddAddressReducer,
+  userShippingAddressDetailReducer,
 } from "./reducers/userReducers";
 import {
   productListReducer,
@@ -29,6 +31,8 @@ const store = configureStore({
     userPasswordToken: userPasswordTokenReducer,
     userUpdateDetails: userUpdateDetailsReducer,
     userShippingAddress: userShippingAddressReducer,
+    userShippingAddressDetail: userShippingAddressDetailReducer,
+    userAddAddress: userAddAddressReducer,
     productList: productListReducer,
     productDetails: productDetailsReducer,
     cart: cartReducer,
