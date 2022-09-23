@@ -8,12 +8,16 @@ import {
   Tooltip,
   Button,
   Accordion,
+  ListGroup,
+  Modal,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { LinkContainer } from "react-router-bootstrap";
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { updateUserDetails } from "../actions/userActions";
+import AddressForm from "../components/AddressForm";
+import { updateUserDetails, getUserAddresses } from "../actions/userActions";
 import { USER_UPDATE_DETAILS_RESET } from "../constants/userConstants";
 
 const ManageAccountScreen = () => {
@@ -25,12 +29,23 @@ const ManageAccountScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const userUpdateDetails = useSelector((state) => state.userUpdateDetails);
   const { loading, success, error } = userUpdateDetails;
+
+  const userShippingAddress = useSelector((state) => state.userShippingAddress);
+  const {
+    loading: addressLoading,
+    userAddresses,
+    error: addressError,
+  } = userShippingAddress;
 
   const validatePassword = (password) => {
     // Password must contain at least one digit, one uppercase letter
@@ -67,6 +82,10 @@ const ManageAccountScreen = () => {
     setLastName(userInfo.last_name);
     setEmail(userInfo.email);
   }, [userInfo]);
+
+  useEffect(() => {
+    dispatch(getUserAddresses());
+  }, [dispatch]);
 
   useEffect(() => {
     return () => {
@@ -181,6 +200,52 @@ const ManageAccountScreen = () => {
         </Col>
         <Col md={8}>
           <h2>Address Book</h2>
+          <Button
+            type="button"
+            className="mb-3 btn d-none d-lg-block"
+            onClick={handleShow}
+          >
+            Add Address
+          </Button>
+          <Row className="d-lg-none d-block mx-0">
+            <Button type="button" className="mb-3" onClick={handleShow}>
+              Add Address
+            </Button>
+          </Row>
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Add Address</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <AddressForm variant="new" />
+            </Modal.Body>
+          </Modal>
+
+          <Row>
+            {addressLoading ? (
+              <Loader />
+            ) : addressError ? (
+              <Message variant="danger">{addressError}</Message>
+            ) : (
+              <ListGroup className="mx-2">
+                {userAddresses.map((address) => {
+                  return address.in_address_book ? (
+                    <LinkContainer to={`/edit_address/${address.id}`}>
+                      <ListGroup.Item action key={address.id}>
+                        <div>
+                          {address.first_name} {address.last_name}
+                        </div>
+                        <div>{address.address}</div>
+                        <div>{address.city}</div>
+                        <div>{address.country}</div>
+                      </ListGroup.Item>
+                    </LinkContainer>
+                  ) : null;
+                })}
+              </ListGroup>
+            )}
+          </Row>
         </Col>
       </Row>
     </Container>
