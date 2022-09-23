@@ -12,7 +12,11 @@ import {
 } from "../actions/userActions";
 import { USER_GET_ADDRESS_DETAIL_RESET } from "../constants/userConstants";
 
-const AddressForm = ({ variant, showAddressBookToggle = false }) => {
+const AddressForm = ({
+  variant,
+  showAddressBookToggle = false,
+  noSave = false,
+}) => {
   const dispatch = useDispatch();
   const id = useParams().id;
 
@@ -32,32 +36,34 @@ const AddressForm = ({ variant, showAddressBookToggle = false }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (variant === "new") {
-      dispatch(
-        addNewAddress({
-          first_name: firstName,
-          last_name: lastName,
-          address: address,
-          city: city,
-          postal_code: postcode,
-          country: country,
-          phone_number: phone,
-          in_address_book: inAddressBook,
-        })
-      );
-    } else if (variant === "update") {
-      dispatch(
-        updateAddress(id, {
-          first_name: firstName,
-          last_name: lastName,
-          address: address,
-          city: city,
-          postal_code: postcode,
-          country: country,
-          phone_number: phone,
-          in_address_book: inAddressBook,
-        })
-      );
+    if (!noSave) {
+      if (variant === "new") {
+        dispatch(
+          addNewAddress({
+            first_name: firstName,
+            last_name: lastName,
+            address: address,
+            city: city,
+            postal_code: postcode,
+            country: country,
+            phone_number: phone,
+            in_address_book: inAddressBook,
+          })
+        );
+      } else if (variant === "update") {
+        dispatch(
+          updateAddress(id, {
+            first_name: firstName,
+            last_name: lastName,
+            address: address,
+            city: city,
+            postal_code: postcode,
+            country: country,
+            phone_number: phone,
+            in_address_book: inAddressBook,
+          })
+        );
+      }
     }
   };
 
@@ -168,22 +174,27 @@ const AddressForm = ({ variant, showAddressBookToggle = false }) => {
             id="inAddressBook"
             label="Save in address book?"
             onChange={(e) => setInAddressBook(e.target.checked)}
+            className="py-3"
           ></Form.Check>
         ) : null}
 
-        <Button
-          type="submit"
-          variant="primary"
-          className="my-3 btn d-none d-lg-block"
-        >
-          {variant === "update" ? "Update" : "Add"}
-        </Button>
+        {noSave ? null : (
+          <div>
+            <Button
+              type="submit"
+              variant="primary"
+              className="my-3 btn d-none d-lg-block"
+            >
+              {variant === "update" ? "Update" : "Add"}
+            </Button>
 
-        <Row className="d-lg-none d-block mx-0">
-          <Button type="submit" className="my-3">
-            {variant === "update" ? "Update" : "Add"}
-          </Button>
-        </Row>
+            <Row className="d-lg-none d-block mx-0">
+              <Button type="submit" className="my-3">
+                {variant === "update" ? "Update" : "Add"}
+              </Button>
+            </Row>
+          </div>
+        )}
       </Form>
     </>
   );
