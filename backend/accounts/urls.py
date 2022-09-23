@@ -11,7 +11,7 @@ from .views import (
 
 
 router = SimpleRouter()
-router.register("", ShippingAddressViewset, basename="addresses")
+router.register("addresses", ShippingAddressViewset, basename="addresses")
 
 urlpatterns = [
     path("login", CustomTokenObtainPairView.as_view(), name="login"),
