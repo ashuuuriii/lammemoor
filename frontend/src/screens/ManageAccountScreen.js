@@ -47,6 +47,9 @@ const ManageAccountScreen = () => {
     error: addressError,
   } = userShippingAddress;
 
+  const userAddAddress = useSelector((state) => state.userAddAddress);
+  const { success: addAddressSuccess } = userAddAddress;
+
   const validatePassword = (password) => {
     // Password must contain at least one digit, one uppercase letter
     // and must have a minimum length of 8 characters
@@ -85,7 +88,7 @@ const ManageAccountScreen = () => {
 
   useEffect(() => {
     dispatch(getUserAddresses());
-  }, [dispatch]);
+  }, [dispatch, addAddressSuccess]);
 
   useEffect(() => {
     return () => {
@@ -231,8 +234,11 @@ const ManageAccountScreen = () => {
               <ListGroup className="mx-2">
                 {userAddresses.map((address) => {
                   return address.in_address_book ? (
-                    <LinkContainer to={`/edit_address/${address.id}`}>
-                      <ListGroup.Item action key={address.id}>
+                    <LinkContainer
+                      to={`/edit_address/${address.id}`}
+                      key={address.id}
+                    >
+                      <ListGroup.Item action>
                         <div>
                           {address.first_name} {address.last_name}
                         </div>
