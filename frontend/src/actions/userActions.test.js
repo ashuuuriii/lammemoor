@@ -10,6 +10,7 @@ import {
   sendPasswordToken,
   resetPassword,
   updateUserDetails,
+  getUserAddresses,
 } from "../actions/userActions";
 
 import {
@@ -29,6 +30,10 @@ import {
   USER_UPDATE_DETAILS_REQUEST,
   USER_UPDATE_DETAILS_SUCCESS,
   USER_UPDATE_DETAILS_FAIL,
+  USER_GET_ADDRESSES_REQUEST,
+  USER_GET_ADDRESSES_SUCCESS,
+  USER_GET_ADDRESSES_FAIL,
+  USER_GET_ADDRESSES_RESET,
 } from "../constants/userConstants";
 
 const mockStore = configureMockStore([thunk]);
@@ -143,7 +148,10 @@ describe("Test logout action", () => {
   });
 
   it("successful logout", () => {
-    const expectedActions = [{ type: USER_LOGOUT }];
+    const expectedActions = [
+      { type: USER_LOGOUT },
+      { type: USER_GET_ADDRESSES_RESET },
+    ];
     jest.spyOn(window.localStorage.__proto__, "removeItem");
 
     store.dispatch(logout());
@@ -400,5 +408,74 @@ describe("Test updateUserDetails action", () => {
         const actualActions = store.getActions();
         expect(actualActions).toEqual(expectedActions);
       });
+  });
+});
+
+describe("Test getUserAddresses action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({ userLogin: { userInfo: "token123" } });
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("addresses successfully fetched", () => {
+    const expectedAddressData = {
+      address: "address",
+      country: "country",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          address: "address",
+          country: "country",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_GET_ADDRESSES_REQUEST },
+      {
+        type: USER_GET_ADDRESSES_SUCCESS,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(getUserAddresses()).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("internal server error occurs", () => {
+    const expectedAddressData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 500,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_GET_ADDRESSES_REQUEST },
+      {
+        type: USER_GET_ADDRESSES_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(getUserAddresses()).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
   });
 });

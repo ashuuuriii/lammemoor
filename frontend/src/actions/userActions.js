@@ -17,6 +17,10 @@ import {
   USER_UPDATE_DETAILS_REQUEST,
   USER_UPDATE_DETAILS_SUCCESS,
   USER_UPDATE_DETAILS_FAIL,
+  USER_GET_ADDRESSES_REQUEST,
+  USER_GET_ADDRESSES_SUCCESS,
+  USER_GET_ADDRESSES_FAIL,
+  USER_GET_ADDRESSES_RESET,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -59,6 +63,7 @@ export const logout = () => (dispatch) => {
   dispatch({
     type: USER_LOGOUT,
   });
+  dispatch({ type: USER_GET_ADDRESSES_RESET });
 };
 
 export const register =
@@ -196,6 +201,38 @@ export const updateUserDetails = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const getUserAddresses = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_GET_ADDRESSES_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/accounts/addresses/", config);
+
+    dispatch({
+      type: USER_GET_ADDRESSES_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_GET_ADDRESSES_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
