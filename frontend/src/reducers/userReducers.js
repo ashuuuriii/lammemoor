@@ -18,6 +18,10 @@ import {
   USER_UPDATE_DETAILS_SUCCESS,
   USER_UPDATE_DETAILS_FAIL,
   USER_UPDATE_DETAILS_RESET,
+  USER_GET_ADDRESSES_REQUEST,
+  USER_GET_ADDRESSES_SUCCESS,
+  USER_GET_ADDRESSES_FAIL,
+  USER_GET_ADDRESSES_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -91,6 +95,24 @@ export const userUpdateDetailsReducer = (state = {}, action) => {
     case USER_UPDATE_DETAILS_RESET:
       return {};
 
+    default:
+      return state;
+  }
+};
+
+export const userShippingAddressReducer = (
+  state = { userAddresses: [] },
+  action
+) => {
+  switch (action.type) {
+    case USER_GET_ADDRESSES_REQUEST:
+      return { loading: true };
+    case USER_GET_ADDRESSES_SUCCESS:
+      return { loading: false, userAddresses: action.payload };
+    case USER_GET_ADDRESSES_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_GET_ADDRESSES_RESET:
+      return { userAddresses: [] };
     default:
       return state;
   }

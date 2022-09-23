@@ -6,6 +6,7 @@ import {
   userPasswordResetReducer,
   userPasswordTokenReducer,
   userUpdateDetailsReducer,
+  userShippingAddressReducer,
 } from "../reducers/userReducers";
 import {
   USER_LOGIN_REQUEST,
@@ -27,6 +28,10 @@ import {
   USER_UPDATE_DETAILS_SUCCESS,
   USER_UPDATE_DETAILS_FAIL,
   USER_UPDATE_DETAILS_RESET,
+  USER_GET_ADDRESSES_REQUEST,
+  USER_GET_ADDRESSES_SUCCESS,
+  USER_GET_ADDRESSES_FAIL,
+  USER_GET_ADDRESSES_RESET,
 } from "../constants/userConstants";
 
 const initialState = { userInfo: null };
@@ -262,6 +267,57 @@ describe("Test userUpdateDetailsReducer", () => {
 
     const reducer = userUpdateDetailsReducer(state, {
       type: USER_UPDATE_DETAILS_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test userShippingAddressReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = {};
+  });
+
+  it("test USER_GET_ADDRESSES_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = userShippingAddressReducer(state, {
+      type: USER_GET_ADDRESSES_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_GET_ADDRESSES_SUCCESS", () => {
+    const expectedData = "success data";
+    const expectedState = {
+      loading: false,
+      userAddresses: expectedData,
+    };
+
+    const reducer = userShippingAddressReducer(state, {
+      type: USER_GET_ADDRESSES_SUCCESS,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_GET_ADDRESSES_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = userShippingAddressReducer(state, {
+      type: USER_GET_ADDRESSES_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_GET_ADDRESSES_RESET", () => {
+    const expectedState = { userAddresses: [] };
+
+    const reducer = userShippingAddressReducer(state, {
+      type: USER_GET_ADDRESSES_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });
