@@ -8,7 +8,8 @@ import {
   userShippingAddressReducer,
   userAddAddressReducer,
   userShippingAddressDetailReducer,
-  userUpdateAddressReducer
+  userUpdateAddressReducer,
+  userRemoveAddressReducer,
 } from "./reducers/userReducers";
 import {
   productListReducer,
@@ -35,6 +36,7 @@ const store = configureStore({
     userShippingAddressDetail: userShippingAddressDetailReducer,
     userAddAddress: userAddAddressReducer,
     userUpdateAddress: userUpdateAddressReducer,
+    userRemoveAddress: userRemoveAddressReducer,
     productList: productListReducer,
     productDetails: productDetailsReducer,
     cart: cartReducer,

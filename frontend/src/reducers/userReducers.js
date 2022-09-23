@@ -34,6 +34,10 @@ import {
   USER_UPDATE_ADDRESS_SUCCESS,
   USER_UPDATE_ADDRESS_FAIL,
   USER_UPDATE_ADDRESS_RESET,
+  USER_REMOVE_ADDRESS_REQUEST,
+  USER_REMOVE_ADDRESS_SUCCESS,
+  USER_REMOVE_ADDRESS_FAIL,
+  USER_REMOVE_ADDRESS_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -169,6 +173,21 @@ export const userUpdateAddressReducer = (state = {}, action) => {
     case USER_UPDATE_ADDRESS_FAIL:
       return { loading: false, error: action.payload };
     case USER_UPDATE_ADDRESS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userRemoveAddressReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_REMOVE_ADDRESS_REQUEST:
+      return { loading: true };
+    case USER_REMOVE_ADDRESS_SUCCESS:
+      return { loading: false, success: true };
+    case USER_REMOVE_ADDRESS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_REMOVE_ADDRESS_RESET:
       return {};
     default:
       return state;

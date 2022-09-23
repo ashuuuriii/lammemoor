@@ -10,6 +10,7 @@ import {
   userShippingAddressDetailReducer,
   userAddAddressReducer,
   userUpdateAddressReducer,
+  userRemoveAddressReducer,
 } from "../reducers/userReducers";
 import {
   USER_LOGIN_REQUEST,
@@ -47,6 +48,10 @@ import {
   USER_UPDATE_ADDRESS_SUCCESS,
   USER_UPDATE_ADDRESS_FAIL,
   USER_UPDATE_ADDRESS_RESET,
+  USER_REMOVE_ADDRESS_REQUEST,
+  USER_REMOVE_ADDRESS_SUCCESS,
+  USER_REMOVE_ADDRESS_FAIL,
+  USER_REMOVE_ADDRESS_RESET,
 } from "../constants/userConstants";
 
 const initialState = { userInfo: null };
@@ -482,6 +487,55 @@ describe("Test userUpdateAddressReducer", () => {
 
     const reducer = userUpdateAddressReducer(state, {
       type: USER_UPDATE_ADDRESS_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test userRemoveAddressReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = {};
+  });
+
+  it("test USER_REMOVE_ADDRESS_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = userRemoveAddressReducer(state, {
+      type: USER_REMOVE_ADDRESS_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_REMOVE_ADDRESS_SUCCESS", () => {
+    const expectedState = {
+      loading: false,
+      success: true,
+    };
+
+    const reducer = userRemoveAddressReducer(state, {
+      type: USER_REMOVE_ADDRESS_SUCCESS,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_REMOVE_ADDRESS_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = userRemoveAddressReducer(state, {
+      type: USER_REMOVE_ADDRESS_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_REMOVE_ADDRESS_RESET", () => {
+    const expectedState = {};
+
+    const reducer = userRemoveAddressReducer(state, {
+      type: USER_REMOVE_ADDRESS_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });
