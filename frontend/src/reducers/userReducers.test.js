@@ -9,6 +9,7 @@ import {
   userShippingAddressReducer,
   userShippingAddressDetailReducer,
   userAddAddressReducer,
+  userUpdateAddressReducer,
 } from "../reducers/userReducers";
 import {
   USER_LOGIN_REQUEST,
@@ -42,6 +43,10 @@ import {
   USER_ADD_ADDRESS_SUCCESS,
   USER_ADD_ADDRESS_FAIL,
   USER_ADD_ADDRESS_RESET,
+  USER_UPDATE_ADDRESS_REQUEST,
+  USER_UPDATE_ADDRESS_SUCCESS,
+  USER_UPDATE_ADDRESS_FAIL,
+  USER_UPDATE_ADDRESS_RESET,
 } from "../constants/userConstants";
 
 const initialState = { userInfo: null };
@@ -375,7 +380,7 @@ describe("Test userShippingAddressDetailReducer", () => {
   });
 
   it("test USER_GET_ADDRESS_DETAIL_RESET", () => {
-    const expectedState = { };
+    const expectedState = {};
 
     const reducer = userShippingAddressDetailReducer(state, {
       type: USER_GET_ADDRESS_DETAIL_RESET,
@@ -428,6 +433,55 @@ describe("Test userAddAddressReducer", () => {
 
     const reducer = userAddAddressReducer(state, {
       type: USER_ADD_ADDRESS_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test userUpdateAddressReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = {};
+  });
+
+  it("test USER_UPDATE_ADDRESS_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = userUpdateAddressReducer(state, {
+      type: USER_UPDATE_ADDRESS_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_UPDATE_ADDRESS_SUCCESS", () => {
+    const expectedState = {
+      loading: false,
+      success: true,
+    };
+
+    const reducer = userUpdateAddressReducer(state, {
+      type: USER_UPDATE_ADDRESS_SUCCESS,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_UPDATE_ADDRESS_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = userUpdateAddressReducer(state, {
+      type: USER_UPDATE_ADDRESS_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_UPDATE_ADDRESS_RESET", () => {
+    const expectedState = {};
+
+    const reducer = userUpdateAddressReducer(state, {
+      type: USER_UPDATE_ADDRESS_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });
