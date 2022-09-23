@@ -13,6 +13,7 @@ import {
   getUserAddresses,
   addNewAddress,
   getUserAddressDetail,
+  updateAddress,
 } from "../actions/userActions";
 
 import {
@@ -42,6 +43,9 @@ import {
   USER_ADD_ADDRESS_REQUEST,
   USER_ADD_ADDRESS_SUCCESS,
   USER_ADD_ADDRESS_FAIL,
+  USER_UPDATE_ADDRESS_REQUEST,
+  USER_UPDATE_ADDRESS_SUCCESS,
+  USER_UPDATE_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 const mockStore = configureMockStore([thunk]);
@@ -634,6 +638,72 @@ describe("Test getUserAddressDetail action", () => {
     ];
 
     return store.dispatch(getUserAddressDetail(1)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test updateAddress action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({ userLogin: { userInfo: "token123" } });
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("addresses successfully fetched", () => {
+    const expectedAddressData = {
+      detail: "updated",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 202,
+        response: {
+          detail: "updated",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_UPDATE_ADDRESS_REQUEST },
+      {
+        type: USER_UPDATE_ADDRESS_SUCCESS,
+      },
+    ];
+
+    return store.dispatch(updateAddress(1, { address: "address" })).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("PUT request for another user's data", () => {
+    const expectedAddressData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 401,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_UPDATE_ADDRESS_REQUEST },
+      {
+        type: USER_UPDATE_ADDRESS_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(updateAddress(1, { address: "address" })).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });

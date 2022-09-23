@@ -27,6 +27,9 @@ import {
   USER_ADD_ADDRESS_REQUEST,
   USER_ADD_ADDRESS_SUCCESS,
   USER_ADD_ADDRESS_FAIL,
+  USER_UPDATE_ADDRESS_REQUEST,
+  USER_UPDATE_ADDRESS_SUCCESS,
+  USER_UPDATE_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -309,6 +312,39 @@ export const getUserAddressDetail = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_GET_ADDRESS_DETAIL_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const updateAddress = (id, address) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_ADDRESS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/accounts/addresses/${id}/`, address, config);
+
+    dispatch({
+      type: USER_UPDATE_ADDRESS_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_ADDRESS_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
