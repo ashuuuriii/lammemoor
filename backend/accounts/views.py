@@ -79,3 +79,24 @@ class ShippingAddressViewset(viewsets.ModelViewSet):
         else:
             addresses = user.shippingaddress_set.all()
         return Response(self.serializer_class(addresses, many=True).data)
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        data = request.data
+        new_address = ShippingAddress.objects.create(
+            user=user,
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            address=data["address"],
+            city=data["city"],
+            country=data["country"],
+            in_address_book=data["in_address_book"],
+        )
+        if data["postal_code"] != "":
+            new_address.postal_code = data["postal_code"]
+        if data["phone_number"] != "":
+            new_address.phone_number = data["phone_number"]
+        new_address.save()
+        return Response(
+            {"detail": "new address added successfully"}, status.HTTP_201_CREATED
+        )

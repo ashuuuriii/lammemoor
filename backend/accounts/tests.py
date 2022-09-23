@@ -1,3 +1,4 @@
+from hashlib import new
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -214,3 +215,24 @@ class ShippingAddressViewsetTest(TestCase):
         response = self.client.get(reverse("addresses-list"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.shipping_address)
+
+    def test_create_view(self):
+        new_address = {
+            "first_name": "John",
+            "last_name": "Doe",
+            "address": "address",
+            "city": "city",
+            "country": "country",
+            "in_address_book": True,
+            "postal_code": "123 456",
+            "phone_number": "9283124801",
+        }
+
+        # test anon user
+        response = self.client.post(reverse("addresses-list"), new_address)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # test logged in user
+        self.client.force_authenticate(self.user)
+        response = self.client.post(reverse("addresses-list"), new_address)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
