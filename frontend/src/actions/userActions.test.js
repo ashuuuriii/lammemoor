@@ -11,6 +11,8 @@ import {
   resetPassword,
   updateUserDetails,
   getUserAddresses,
+  addNewAddress,
+  getUserAddressDetail,
 } from "../actions/userActions";
 
 import {
@@ -34,6 +36,12 @@ import {
   USER_GET_ADDRESSES_SUCCESS,
   USER_GET_ADDRESSES_FAIL,
   USER_GET_ADDRESSES_RESET,
+  USER_GET_ADDRESS_DETAIL_REQUEST,
+  USER_GET_ADDRESS_DETAIL_SUCCESS,
+  USER_GET_ADDRESS_DETAIL_FAIL,
+  USER_ADD_ADDRESS_REQUEST,
+  USER_ADD_ADDRESS_SUCCESS,
+  USER_ADD_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 const mockStore = configureMockStore([thunk]);
@@ -474,6 +482,158 @@ describe("Test getUserAddresses action", () => {
     ];
 
     return store.dispatch(getUserAddresses()).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test addNewAddress action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({ userLogin: { userInfo: "token123" } });
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("addresses successfully fetched", () => {
+    const expectedAddressData = {
+      address: "address",
+      country: "country",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 201,
+        response: {
+          address: "address",
+          country: "country",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_ADD_ADDRESS_REQUEST },
+      {
+        type: USER_ADD_ADDRESS_SUCCESS,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store
+      .dispatch(
+        addNewAddress({
+          address: "address",
+          country: "country",
+        })
+      )
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+      });
+  });
+
+  it("internal server error occurs", () => {
+    const expectedAddressData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 500,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_ADD_ADDRESS_REQUEST },
+      {
+        type: USER_ADD_ADDRESS_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store
+      .dispatch(
+        addNewAddress({
+          address: "address",
+          country: "country",
+        })
+      )
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+      });
+  });
+});
+
+describe("Test getUserAddressDetail action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({ userLogin: { userInfo: "token123" } });
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("addresses successfully fetched", () => {
+    const expectedAddressData = {
+      address: "address",
+      country: "country",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          address: "address",
+          country: "country",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_GET_ADDRESS_DETAIL_REQUEST },
+      {
+        type: USER_GET_ADDRESS_DETAIL_SUCCESS,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(getUserAddressDetail(1)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("GET request for another user's data", () => {
+    const expectedAddressData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 401,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: USER_GET_ADDRESS_DETAIL_REQUEST },
+      {
+        type: USER_GET_ADDRESS_DETAIL_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(getUserAddressDetail(1)).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });

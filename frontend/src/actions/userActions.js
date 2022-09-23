@@ -21,6 +21,12 @@ import {
   USER_GET_ADDRESSES_SUCCESS,
   USER_GET_ADDRESSES_FAIL,
   USER_GET_ADDRESSES_RESET,
+  USER_GET_ADDRESS_DETAIL_REQUEST,
+  USER_GET_ADDRESS_DETAIL_SUCCESS,
+  USER_GET_ADDRESS_DETAIL_FAIL,
+  USER_ADD_ADDRESS_REQUEST,
+  USER_ADD_ADDRESS_SUCCESS,
+  USER_ADD_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -233,6 +239,76 @@ export const getUserAddresses = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_GET_ADDRESSES_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const addNewAddress = (address) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_ADD_ADDRESS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/accounts/addresses/`,
+      address,
+      config
+    );
+
+    dispatch({
+      type: USER_ADD_ADDRESS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ADD_ADDRESS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const getUserAddressDetail = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_GET_ADDRESS_DETAIL_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/accounts/addresses/${id}`, config);
+
+    dispatch({
+      type: USER_GET_ADDRESS_DETAIL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_GET_ADDRESS_DETAIL_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
