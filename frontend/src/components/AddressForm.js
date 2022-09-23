@@ -5,7 +5,11 @@ import { useParams } from "react-router-dom";
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { addNewAddress, getUserAddressDetail } from "../actions/userActions";
+import {
+  addNewAddress,
+  getUserAddressDetail,
+  updateAddress,
+} from "../actions/userActions";
 import { USER_GET_ADDRESS_DETAIL_RESET } from "../constants/userConstants";
 
 const AddressForm = ({ variant, showAddressBookToggle = false }) => {
@@ -42,7 +46,18 @@ const AddressForm = ({ variant, showAddressBookToggle = false }) => {
         })
       );
     } else if (variant === "update") {
-      console.log("update");
+      dispatch(
+        updateAddress(id, {
+          first_name: firstName,
+          last_name: lastName,
+          address: address,
+          city: city,
+          postal_code: postcode,
+          country: country,
+          phone_number: phone,
+          in_address_book: inAddressBook,
+        })
+      );
     }
   };
 
