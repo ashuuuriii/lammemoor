@@ -240,11 +240,26 @@ const ManageAccountScreen = () => {
                     >
                       <ListGroup.Item action>
                         <div>
+                          <strong>Name: </strong>
                           {address.first_name} {address.last_name}
                         </div>
-                        <div>{address.address}</div>
-                        <div>{address.city}</div>
-                        <div>{address.country}</div>
+                        {address.phone_number ? (
+                          <div>
+                            <strong>Phone Number: </strong>
+                            {address.phone_number}
+                          </div>
+                        ) : null}
+                        <div>
+                          <strong>Address:</strong>
+                          <div>
+                            {address.address}, {address.city}
+                          </div>
+                          <div>{address.country}</div>
+                        </div>
+
+                        {address.postal_code ? (
+                          <div><strong>Postal Code: </strong>{address.postal_code}</div>
+                        ) : null}
                       </ListGroup.Item>
                     </LinkContainer>
                   ) : null;
