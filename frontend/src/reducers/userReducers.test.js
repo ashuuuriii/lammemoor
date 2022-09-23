@@ -383,3 +383,52 @@ describe("Test userShippingAddressDetailReducer", () => {
     expect(reducer).toEqual(expectedState);
   });
 });
+
+describe("Test userAddAddressReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = {};
+  });
+
+  it("test USER_GET_ADDRESS_DETAIL_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = userAddAddressReducer(state, {
+      type: USER_ADD_ADDRESS_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_ADD_ADDRESS_SUCCESS", () => {
+    const expectedState = {
+      loading: false,
+      success: true,
+    };
+
+    const reducer = userAddAddressReducer(state, {
+      type: USER_ADD_ADDRESS_SUCCESS,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_ADD_ADDRESS_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = userAddAddressReducer(state, {
+      type: USER_ADD_ADDRESS_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test USER_GET_ADDRESS_DETAIL_RESET", () => {
+    const expectedState = {};
+
+    const reducer = userAddAddressReducer(state, {
+      type: USER_ADD_ADDRESS_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
