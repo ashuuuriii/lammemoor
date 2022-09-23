@@ -22,6 +22,14 @@ import {
   USER_GET_ADDRESSES_SUCCESS,
   USER_GET_ADDRESSES_FAIL,
   USER_GET_ADDRESSES_RESET,
+  USER_GET_ADDRESS_DETAIL_REQUEST,
+  USER_GET_ADDRESS_DETAIL_SUCCESS,
+  USER_GET_ADDRESS_DETAIL_FAIL,
+  USER_GET_ADDRESS_DETAIL_RESET,
+  USER_ADD_ADDRESS_REQUEST,
+  USER_ADD_ADDRESS_SUCCESS,
+  USER_ADD_ADDRESS_FAIL,
+  USER_ADD_ADDRESS_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -113,6 +121,36 @@ export const userShippingAddressReducer = (
       return { loading: false, error: action.payload };
     case USER_GET_ADDRESSES_RESET:
       return { userAddresses: [] };
+    default:
+      return state;
+  }
+};
+
+export const userShippingAddressDetailReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_GET_ADDRESS_DETAIL_REQUEST:
+      return { loading: true };
+    case USER_GET_ADDRESS_DETAIL_SUCCESS:
+      return { loading: false, address: action.payload };
+    case USER_GET_ADDRESS_DETAIL_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_GET_ADDRESS_DETAIL_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userAddAddressReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_ADD_ADDRESS_REQUEST:
+      return { loading: true };
+    case USER_ADD_ADDRESS_SUCCESS:
+      return { loading: false, success: true };
+    case USER_ADD_ADDRESS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_ADD_ADDRESS_RESET:
+      return {};
     default:
       return state;
   }
