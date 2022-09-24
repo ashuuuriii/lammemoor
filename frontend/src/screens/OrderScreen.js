@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
-import { Row, Col, Card, Form, Table } from "react-bootstrap";
+import { Row, Col, Card, Button, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import PriceCard from "../components/PriceCard";
+import AddressForm from "../components/AddressForm";
+import CheckoutProgress from "../components/CheckoutProgress";
+
+import "./OrderScreen.css";
 
 const OrderScreen = () => {
   const navigate = useNavigate();
@@ -13,6 +17,20 @@ const OrderScreen = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const continueButtonHandler = () => {
+    // click submit button in AddressForm component, triggers form submit.
+    // AddressForm component is not loaded when only e-patterns are in the cart.
+    if (cartItems.some((item) => item.itemType === "paper")) {
+      const hiddenSubmitButton = document.querySelector(".hidden-submit-btn");
+      hiddenSubmitButton.click();
+      if (document.querySelector("form").checkValidity()) {
+        navigate("/order/confirm");
+      }
+    } else {
+      navigate("/order/confirm");
+    }
+  };
 
   useEffect(() => {
     if (!userInfo) {
@@ -32,10 +50,15 @@ const OrderScreen = () => {
           </p>
         ) : null}
         {cartItems.some((item) => item.itemType === "paper") ? (
-          <Form></Form>
+          <div>
+            <Button type="button" className="address-btn">
+              Choose from address book
+            </Button>
+            <AddressForm variant="new" showAddressBookToggle noSave noButton />
+          </div>
         ) : null}
       </Col>
-      <Col md={4}>
+      <Col lg={4}>
         <Row>
           <Card>
             <Card.Header>
@@ -52,7 +75,7 @@ const OrderScreen = () => {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr>
+                    <tr key={item.product}>
                       <td>
                         {item.name} -{" "}
                         {item.itemType === "paper" ? "paper" : "e-pattern"}
@@ -68,6 +91,15 @@ const OrderScreen = () => {
         </Row>
         <Row className="pt-4">
           <PriceCard />
+        </Row>
+        <Row>
+          <Button
+            type="submit"
+            className="my-3"
+            onClick={continueButtonHandler}
+          >
+            Continue
+          </Button>
         </Row>
       </Col>
     </Row>
