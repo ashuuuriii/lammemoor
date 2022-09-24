@@ -22,7 +22,8 @@ const OrderScreen = () => {
 
   return (
     <Row className="pt-4">
-      <Col md={8}>
+      <CheckoutProgress step1 step2 />
+      <Col lg={7}>
         <h1>Shipping Details</h1>
         {cartItems.some((item) => item.itemType === "pdf") ? (
           <p>

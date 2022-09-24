@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Message from "../components/Message";
 import PriceCard from "../components/PriceCard";
+import CheckoutProgress from "../components/CheckoutProgress"
 import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = () => {
@@ -31,6 +32,7 @@ const CartScreen = () => {
 
   return (
     <Row className="pt-4">
+      <CheckoutProgress step1 />
       <Col md={8}>
         <h2>Cart</h2>
         {cartItems.length === 0 ? (
