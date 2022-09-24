@@ -43,10 +43,10 @@ const EditAddressScreen = () => {
   }, [removeSuccess, navigate]);
 
   return (
-    <>
-      <Link to="/accounts/manage/">
-        <Button className="my-3 d-none d-lg-block">Go back</Button>
-      </Link>
+    <div className="pt-4">
+      <Button className="my-3 d-none d-lg-block" onClick={() => navigate(-1)}>
+        Go back
+      </Button>
       <FormContainer>
         <h1>Edit</h1>
         {loading && <Loader />}
@@ -59,7 +59,7 @@ const EditAddressScreen = () => {
           Remove from address book
         </Button>
       </FormContainer>
-    </>
+    </div>
   );
 };
 

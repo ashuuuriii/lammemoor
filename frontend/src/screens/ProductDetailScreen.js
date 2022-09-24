@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Row, Col, Image, Button } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Loader from "../components/Loader";
@@ -11,6 +11,7 @@ import { PRODUCT_CATEGORIES } from "../constants/productConstants";
 
 const ProductDetailScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productId = useParams().id;
   const productDetails = useSelector((state) => state.productDetails);
@@ -23,9 +24,7 @@ const ProductDetailScreen = () => {
   // TODO: add reviews section
   return (
     <div className="pt-4">
-      <Link to="/shop">
-        <Button>Go back</Button>
-      </Link>
+      <Button onClick={() => navigate(-1)}>Go back</Button>
       {loading ? (
         <Loader />
       ) : error ? (
