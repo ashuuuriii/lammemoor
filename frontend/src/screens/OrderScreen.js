@@ -22,7 +22,7 @@ const OrderScreen = () => {
   const { userInfo } = userLogin;
 
   const userShippingAddress = useSelector((state) => state.userShippingAddress);
-  const { loading, userAddresses, error } = userShippingAddress;
+  const { userAddresses } = userShippingAddress;
 
   // toggle address book or form
   const [showAddressBook, setShowAddressBook] = useState(false);

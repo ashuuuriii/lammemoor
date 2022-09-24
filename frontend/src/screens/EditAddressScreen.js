@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import FormContainer from "../components/FormContainer";
@@ -23,7 +23,7 @@ const EditAddressScreen = () => {
   const { loading, success, error } = userUpdateAddress;
 
   const userRemoveAddress = useSelector((state) => state.userRemoveAddress);
-  const { loading: removeLoading, success: removeSuccess } = userRemoveAddress;
+  const { success: removeSuccess } = userRemoveAddress;
 
   const removeButtonHandler = (e) => {
     dispatch(removeAddress(id, false));
