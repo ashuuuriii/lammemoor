@@ -13,21 +13,39 @@ import {
 import { USER_GET_ADDRESS_DETAIL_RESET } from "../constants/userConstants";
 
 const AddressForm = ({
-  variant,
-  showAddressBookToggle = false,
-  noSave = false,
+  variant, // "new" or "update", triggers POST or GET request on submit
+  showAddressBookToggle = false, // submits inAddressBook as true without displaying option
+  noSave = false, // saves to local storage instead of db
+  noButton = false, // hides button for layout customisation.
 }) => {
   const dispatch = useDispatch();
   const id = useParams().id;
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [country, setCountry] = useState("");
-  const [phone, setPhone] = useState("");
-  const [inAddressBook, setInAddressBook] = useState(true);
+  const addressFromStore = JSON.parse(localStorage.getItem("cartAddress"));
+  const [firstName, setFirstName] = useState(
+    addressFromStore ? addressFromStore.first_name : ""
+  );
+  const [lastName, setLastName] = useState(
+    addressFromStore ? addressFromStore.last_name : ""
+  );
+  const [address, setAddress] = useState(
+    addressFromStore ? addressFromStore.address : ""
+  );
+  const [city, setCity] = useState(
+    addressFromStore ? addressFromStore.city : ""
+  );
+  const [postcode, setPostcode] = useState(
+    addressFromStore ? addressFromStore.postal_code : ""
+  );
+  const [country, setCountry] = useState(
+    addressFromStore ? addressFromStore.country : ""
+  );
+  const [phone, setPhone] = useState(
+    addressFromStore ? addressFromStore.useState : ""
+  );
+  const [inAddressBook, setInAddressBook] = useState(
+    addressFromStore ? addressFromStore.first_name : true
+  );
 
   const userShippingAddressDetail = useSelector(
     (state) => state.userShippingAddressDetail
@@ -36,34 +54,24 @@ const AddressForm = ({
 
   const submitHandler = (e) => {
     e.preventDefault();
+    const submitAddress = {
+      first_name: firstName,
+      last_name: lastName,
+      address: address,
+      city: city,
+      postal_code: postcode,
+      country: country,
+      phone_number: phone,
+      in_address_book: inAddressBook,
+    };
     if (!noSave) {
       if (variant === "new") {
-        dispatch(
-          addNewAddress({
-            first_name: firstName,
-            last_name: lastName,
-            address: address,
-            city: city,
-            postal_code: postcode,
-            country: country,
-            phone_number: phone,
-            in_address_book: inAddressBook,
-          })
-        );
+        dispatch(addNewAddress(submitAddress));
       } else if (variant === "update") {
-        dispatch(
-          updateAddress(id, {
-            first_name: firstName,
-            last_name: lastName,
-            address: address,
-            city: city,
-            postal_code: postcode,
-            country: country,
-            phone_number: phone,
-            in_address_book: inAddressBook,
-          })
-        );
+        dispatch(updateAddress(id, submitAddress));
       }
+    } else {
+      localStorage.setItem("cartAddress", JSON.stringify(submitAddress));
     }
   };
 
@@ -174,11 +182,14 @@ const AddressForm = ({
             id="inAddressBook"
             label="Save in address book?"
             onChange={(e) => setInAddressBook(e.target.checked)}
+            checked={inAddressBook}
             className="py-3"
           ></Form.Check>
         ) : null}
 
-        {noSave ? null : (
+        {noButton ? (
+          <Button type="submit" className="d-none hidden-submit-btn"></Button>
+        ) : (
           <div>
             <Button
               type="submit"
