@@ -2,7 +2,7 @@ import React from "react";
 import { Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-const CheckoutSteps = ({ step1, step2, step3 }) => {
+const CheckoutProgress = ({ step1, step2, step3, step4 }) => {
   return (
     <Nav className="justify-content-center mb-4">
       <Nav.Item>
@@ -64,8 +64,26 @@ const CheckoutSteps = ({ step1, step2, step3 }) => {
           </Nav.Link>
         )}
       </Nav.Item>
+
+      <Nav.Item>
+        {step4 ? (
+            <Nav.Link className="last">
+              Payment
+              <div className="text-center">
+                <i className="bi bi-check-circle"></i>
+              </div>
+            </Nav.Link>
+        ) : (
+          <Nav.Link disabled>
+            Payment
+            <div className="text-center">
+              <i className="bi bi-circle"></i>
+            </div>
+          </Nav.Link>
+        )}
+      </Nav.Item>
     </Nav>
   );
 };
 
-export default CheckoutSteps;
+export default CheckoutProgress;
