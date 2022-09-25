@@ -1,4 +1,8 @@
-.address-btn {
+.no-wrap {
+  flex-wrap: nowrap;
+}
+
+.btn-to-link {
   text-decoration: underline;
   --bs-btn-color: var(--bs-blue);
   --bs-btn-bg: transparent;

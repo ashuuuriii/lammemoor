@@ -8,7 +8,7 @@ import AddressForm from "../components/AddressForm";
 import CheckoutProgress from "../components/CheckoutProgress";
 import { getUserAddresses } from "../actions/userActions";
 
-import "./OrderScreen.css";
+import "../custom_properties.css";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -89,7 +89,7 @@ const OrderScreen = () => {
               <div>
                 <Button
                   type="button"
-                  className="address-btn"
+                  className="btn-to-link"
                   onClick={hideAddressBook}
                 >
                   Enter a different address
@@ -116,7 +116,7 @@ const OrderScreen = () => {
               <div>
                 <Button
                   type="button"
-                  className="address-btn"
+                  className="btn-to-link"
                   onClick={displayAddressBook}
                 >
                   Choose from address book

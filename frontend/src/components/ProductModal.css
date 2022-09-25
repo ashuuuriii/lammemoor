@@ -1,8 +1,0 @@
-.quickview-btn {
-  text-decoration: underline;
-  --bs-btn-color: var(--bs-blue);
-  --bs-btn-bg: transparent;
-  --bs-btn-border-color: none;
-  --bs-btn-hover-color: var(--bs-teal);
-  --bs-btn-hover-bg: transparent;
-}

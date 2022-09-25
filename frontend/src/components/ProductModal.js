@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import CartAdder from "./CartAdder";
 
-import "./ProductModal.css";
+import "../custom_properties.css"
 
 const ProductModal = ({ product }) => {
   const [show, setShow] = useState(false);
@@ -13,7 +13,7 @@ const ProductModal = ({ product }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} className="quickview-btn">
+      <Button onClick={handleOpen} className="btn-to-link">
         Quick View
       </Button>
       <Modal show={show} onHide={handleClose}>
