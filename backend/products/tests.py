@@ -39,5 +39,4 @@ class ProductViewSetTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.product)
-        self.assertEqual(response.data["user"], self.user.pk)
         self.assertEqual(response.data["name"], "Product Name")
