@@ -78,6 +78,8 @@ export const logout = () => (dispatch) => {
   });
   dispatch({ type: USER_GET_ADDRESSES_RESET });
   dispatch({ type: USER_GET_ADDRESS_DETAIL_RESET });
+
+  localStorage.removeItem("cartAddress");
 };
 
 export const register =
