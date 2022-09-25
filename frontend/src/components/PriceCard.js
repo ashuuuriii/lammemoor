@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 const PriceCard = () => {
   const [subtotal, setSubtotal] = useState((0).toFixed(2));
-  const [vat, setVat] = useState((0).toFixed(2));
   const [shipping, setShipping] = useState((0).toFixed(2));
   const [total, setTotal] = useState((0).toFixed(2));
 
@@ -16,16 +15,14 @@ const PriceCard = () => {
       (acc, item) => acc + Number(item.price) * Number(item.qty),
       0
     );
-    const tempVat = tempSubtotal * 0.2;
     const tempShipping = cartItems.some((item) => item.itemType === "paper")
       ? tempSubtotal >= 50
         ? 0
         : 5
       : 0;
     setSubtotal(tempSubtotal.toFixed(2));
-    setVat(tempVat.toFixed(2));
     setShipping(tempShipping.toFixed(2));
-    setTotal((tempSubtotal + tempVat + tempShipping).toFixed(2));
+    setTotal((tempSubtotal + tempShipping).toFixed(2));
   }, [cartItems]);
 
   return (
@@ -36,10 +33,7 @@ const PriceCard = () => {
       <Card.Body>
         <ListGroup variant="flush">
           <ListGroup.Item>
-            <strong>Subtotal:</strong> £{subtotal}
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <strong>VAT:</strong> £{vat}
+            <strong>Sub-total:</strong> £{subtotal}
           </ListGroup.Item>
           <ListGroup.Item>
             <strong>Shipping:</strong> £{shipping}
