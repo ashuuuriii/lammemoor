@@ -4,5 +4,5 @@ from .views import OrderViewSet
 
 
 router = SimpleRouter()
-router.register("order", OrderViewSet, basename="orders")
+router.register("", OrderViewSet, basename="orders")
 urlpatterns = router.urls
