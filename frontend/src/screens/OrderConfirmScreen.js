@@ -1,13 +1,17 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Button, ListGroup, Image } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import PriceCard from "../components/PriceCard";
 import CheckoutProgress from "../components/CheckoutProgress";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+import { createOrder } from "../actions/orderActions";
 
 const OrderConfirmScreen = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const addressFromStore = JSON.parse(localStorage.getItem("cartAddress"));
 
@@ -16,6 +20,18 @@ const OrderConfirmScreen = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { loading, success, error } = orderCreate;
+
+  const orderPlacementHandler = () => {
+    dispatch(
+      createOrder({
+        order_items: cartItems,
+        shipping_address: addressFromStore ? addressFromStore : "",
+      })
+    );
+  };
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -30,10 +46,18 @@ const OrderConfirmScreen = () => {
     }
   }, [addressFromStore, cartItems, userInfo, navigate]);
 
+  useEffect(()=> {
+    if (success) {
+      navigate("/order/payment/");
+    }
+  }, [success, navigate])
+
   return (
     <Container className="pt-4">
       <CheckoutProgress step1 step2 step3 />
       <Row>
+        {loading && <Loader />}
+        {error && <Message variant="danger">{error}</Message>}
         <Col lg={7}>
           <h1>Review Your Order</h1>
           <Row className="my-3">
@@ -108,11 +132,12 @@ const OrderConfirmScreen = () => {
           <Row>
             <Button
               type="button"
-              onClick={() =>
+              onClick={() => {
                 alert(
                   "This is a demo linked to test mode Stripe account. No actual transactions takes place."
-                )
-              }
+                );
+                orderPlacementHandler();
+              }}
               className="my-3"
             >
               To payment page
