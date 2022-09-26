@@ -31,14 +31,14 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         order.total_price = decimal.Decimal(order.shipping_price + order.subtotal_price)
 
-    def get_order_item_price(self, product, item):
+    def get_order_item_price(self, product, item, quantity):
         if item["itemType"] == "pdf":
             return product.pdf_price
         else:
-            return product.price * item["qty"]
+            return product.price * int(item["qty"])
 
     def update_product_quantity(self, product, quantity):
-        product.n_stock -= quantity
+        product.n_stock -= int(quantity)
         product.save()
 
     def get_shipping_address_foreign_key(self, address_data):
@@ -69,20 +69,21 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         for item in order_items:
             product = Product.objects.get(pk=item["product"])
-            price = decimal.Decimal(self.get_order_item_price(product, item))
+            quantity = int(item["qty"]) if item["qty"] else 0
+            price = decimal.Decimal(self.get_order_item_price(product, item, quantity))
 
             order_item = OrderItem.objects.create(
                 product=product,
                 order=order,
                 name=item["name"],
-                purchased_qty=item["qty"],
+                purchased_qty=quantity,
                 type=item["itemType"],
                 price=price,
                 image=item["image"],
             )
 
             if order_item.type == "paper":
-                self.update_product_quantity(product, item["qty"])
+                self.update_product_quantity(product, quantity)
 
             order_items_prices.append(price)
 
