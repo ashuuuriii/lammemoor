@@ -16,6 +16,7 @@ import ProductDetailScreen from "./screens/ProductDetailScreen";
 import CartScreen from "./screens/CartScreen";
 import OrderScreen from "./screens/OrderScreen";
 import OrderConfirmScreen from "./screens/OrderConfirmScreen";
+import PaymentScreen from "./screens/PaymentScreen";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetailScreen />} />
             <Route path="/cart/" element={<CartScreen />} />
             <Route path="/order/confirm" element={<OrderConfirmScreen />} />
+            <Route path="/order/payment" element={<PaymentScreen />} />
             <Route path="/order/" element={<OrderScreen />} />
           </Routes>
         </Container>
