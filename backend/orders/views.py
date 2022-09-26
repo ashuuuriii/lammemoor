@@ -23,29 +23,38 @@ class OrderViewSet(viewsets.ModelViewSet):
                 {"detail": "No order items"}, status=status.HTTP_400_BAD_REQUEST
             )
         else:
-            # Get existing address or create new address db entry
+            # Check if any item in order items require a shipping address.
+            # Get existing address or create new address db entry if shipping address is required.
             # Create Order object
             # Create OrderItem objects and add Order as a foreign key
-            if data["shipping_address"].get("id"):
-                shipping_address = ShippingAddress.objects.get(
-                    id=data["shipping_address"]["id"]
+            if data["shipping_address"] != "":
+                if data["shipping_address"].get("id"):
+                    shipping_address = ShippingAddress.objects.get(
+                        id=data["shipping_address"]["id"]
+                    )
+                else:
+                    addr = data["shipping_address"]
+                    shipping_address = ShippingAddress.objects.create(
+                        user=user,
+                        first_name=addr["first_name"],
+                        last_name=addr["last_name"],
+                        address=addr["address"],
+                        city=addr["city"],
+                        country=addr["country"],
+                        in_address_book=addr["in_address_book"],
+                    )
+                    if addr["postal_code"] != "":
+                        shipping_address.postal_code = addr["postal_code"]
+                    if addr["phone_number"] != "":
+                        shipping_address.phone_number = addr["phone_number"]
+                    shipping_address.save()
+            elif not all([item["itemType"] == "pdf" for item in order_items]):
+                return Response(
+                    {"detail": "No shipping address provided with physical product."},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
             else:
-                addr = data["shipping_address"]
-                shipping_address = ShippingAddress.objects.create(
-                    user=user,
-                    first_name=addr["first_name"],
-                    last_name=addr["last_name"],
-                    address=addr["address"],
-                    city=addr["city"],
-                    country=addr["country"],
-                    in_address_book=addr["in_address_book"],
-                )
-                if addr["postal_code"] != "":
-                    shipping_address.postal_code = addr["postal_code"]
-                if addr["phone_number"] != "":
-                    shipping_address.phone_number = addr["phone_number"]
-                shipping_address.save()
+                shipping_address = None
 
             order = Order.objects.create(
                 user=user,
@@ -55,7 +64,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                 shipping_address=shipping_address,
             )
             order.save()
-            
+
             for item in order_items:
                 order_item = OrderItem.objects.create(
                     product=Product.objects.get(pk=item["product"]),
@@ -64,7 +73,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                     purchased_qty=item["qty"],
                     type=item["itemType"],
                     price=item["price"],
-                    image=item["image"]
+                    image=item["image"],
                 )
                 order_item.save()
 

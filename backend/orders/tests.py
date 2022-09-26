@@ -218,3 +218,79 @@ class OrderViewSetTest(TestCase):
         response = self.client.post(reverse("orders-list"), order, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_no_shipping_address_pdf_only(self):
+        order = {
+            "shipping_address": "",
+            "shipping_price": 5.00,
+            "total_price": 20.93,
+            "subtotal_price": 15.93,
+            "order_items": [
+                {
+                    "product": self.product1.pk,
+                    "name": self.product1.name,
+                    "qty": None,
+                    "itemType": "pdf",
+                    "price": 3.31,
+                    "image": "imagelink",
+                },
+                {
+                    "product": self.product2.pk,
+                    "name": self.product2.name,
+                    "qty": 2,
+                    "itemType": "pdf",
+                    "price": 12.62,
+                    "image": "imagelink",
+                },
+            ],
+        }
+
+        self.client.force_authenticate(self.user)
+
+        response = self.client.post(reverse("orders-list"), order, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        new_order_obj = Order.objects.last()
+        self.assertEqual(new_order_obj.user, self.user)
+        self.assertIsNone(new_order_obj.shipping_address)
+
+        new_order_item_objs = OrderItem.objects.all()
+        self.assertEqual(new_order_item_objs[0].product, self.product1)
+        self.assertEqual(new_order_item_objs[1].product, self.product2)
+
+    def test_no_shipping_address_raises_400(self):
+        order = {
+            "shipping_address": "",
+            "shipping_price": 5.00,
+            "total_price": 20.93,
+            "subtotal_price": 15.93,
+            "order_items": [
+                {
+                    "product": self.product1.pk,
+                    "name": self.product1.name,
+                    "qty": None,
+                    "itemType": "pdf",
+                    "price": 3.31,
+                    "image": "imagelink",
+                },
+                {
+                    "product": self.product2.pk,
+                    "name": self.product2.name,
+                    "qty": 2,
+                    "itemType": "paper",
+                    "price": 12.62,
+                    "image": "imagelink",
+                },
+            ],
+        }
+
+        self.client.force_authenticate(self.user)
+
+        response = self.client.post(reverse("orders-list"), order, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["detail"],
+            "No shipping address provided with physical product.",
+        )
