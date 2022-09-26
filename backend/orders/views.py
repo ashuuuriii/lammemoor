@@ -13,6 +13,42 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsStaffOrOwnerOnly,)
 
+    def get_shipping_address_foreign_key(self, address_data):
+        # Check if any item in order items require a shipping address.
+        # Get existing address or create new address db entry if shipping address is required.
+        if address_data.get("id"):
+            shipping_address = ShippingAddress.objects.get(id=address_data["id"])
+        else:
+            shipping_address = ShippingAddress.objects.create(
+                user=self.request.user,
+                first_name=address_data["first_name"],
+                last_name=address_data["last_name"],
+                address=address_data["address"],
+                city=address_data["city"],
+                country=address_data["country"],
+                in_address_book=address_data["in_address_book"],
+            )
+            if address_data["postal_code"] != "":
+                shipping_address.postal_code = address_data["postal_code"]
+            if address_data["phone_number"] != "":
+                shipping_address.phone_number = address_data["phone_number"]
+            shipping_address.save()
+        return shipping_address
+
+    def save_order_items(self, order_items, order):
+        # Create OrderItem objects and add Order as a foreign key
+        for item in order_items:
+            order_item = OrderItem.objects.create(
+                product=Product.objects.get(pk=item["product"]),
+                order=order,
+                name=item["name"],
+                purchased_qty=item["qty"],
+                type=item["itemType"],
+                price=item["price"],
+                image=item["image"],
+            )
+            order_item.save()
+
     def create(self, request, *args, **kwargs):
         user = request.user
         data = request.data
@@ -23,31 +59,11 @@ class OrderViewSet(viewsets.ModelViewSet):
                 {"detail": "No order items"}, status=status.HTTP_400_BAD_REQUEST
             )
         else:
-            # Check if any item in order items require a shipping address.
-            # Get existing address or create new address db entry if shipping address is required.
             # Create Order object
-            # Create OrderItem objects and add Order as a foreign key
             if data["shipping_address"] != "":
-                if data["shipping_address"].get("id"):
-                    shipping_address = ShippingAddress.objects.get(
-                        id=data["shipping_address"]["id"]
-                    )
-                else:
-                    addr = data["shipping_address"]
-                    shipping_address = ShippingAddress.objects.create(
-                        user=user,
-                        first_name=addr["first_name"],
-                        last_name=addr["last_name"],
-                        address=addr["address"],
-                        city=addr["city"],
-                        country=addr["country"],
-                        in_address_book=addr["in_address_book"],
-                    )
-                    if addr["postal_code"] != "":
-                        shipping_address.postal_code = addr["postal_code"]
-                    if addr["phone_number"] != "":
-                        shipping_address.phone_number = addr["phone_number"]
-                    shipping_address.save()
+                shipping_address = self.get_shipping_address_foreign_key(
+                    data["shipping_address"]
+                )
             elif not all([item["itemType"] == "pdf" for item in order_items]):
                 return Response(
                     {"detail": "No shipping address provided with physical product."},
@@ -64,17 +80,6 @@ class OrderViewSet(viewsets.ModelViewSet):
                 shipping_address=shipping_address,
             )
             order.save()
-
-            for item in order_items:
-                order_item = OrderItem.objects.create(
-                    product=Product.objects.get(pk=item["product"]),
-                    order=order,
-                    name=item["name"],
-                    purchased_qty=item["qty"],
-                    type=item["itemType"],
-                    price=item["price"],
-                    image=item["image"],
-                )
-                order_item.save()
+            self.save_order_items(order_items, order)
 
             return Response(self.serializer_class(order, many=False).data)
