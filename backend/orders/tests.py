@@ -28,7 +28,7 @@ class OrderViewSetTest(TestCase):
             n_reviews=5,
             price=6.31,
             pdf_price=3.31,
-            n_stock=0,
+            n_stock=1,
         )
         self.product2 = Product.objects.create(
             user=self.user,
@@ -39,7 +39,7 @@ class OrderViewSetTest(TestCase):
             n_reviews=5,
             price=6.31,
             pdf_price=3.31,
-            n_stock=0,
+            n_stock=5,
         )
         self.shipping_address = ShippingAddress.objects.create(
             user=self.user,
@@ -102,6 +102,11 @@ class OrderViewSetTest(TestCase):
         self.assertEqual(new_order_item_objs[0].product, self.product1)
         self.assertEqual(new_order_item_objs[1].product, self.product2)
 
+        # product1 quantity should not be changed because of item type
+        # product2's quantity needs to be reduced based on order amount
+        self.assertEqual(Product.objects.all()[0].n_stock, 1)
+        self.assertEqual(Product.objects.all()[1].n_stock, 3)
+
     def test_newly_entered_address(self):
         order = {
             "shipping_address": {
@@ -150,6 +155,9 @@ class OrderViewSetTest(TestCase):
         new_order_item_objs = OrderItem.objects.all()
         self.assertEqual(new_order_item_objs[0].product, self.product1)
         self.assertEqual(new_order_item_objs[1].product, self.product2)
+
+        self.assertEqual(Product.objects.all()[0].n_stock, 1)
+        self.assertEqual(Product.objects.all()[1].n_stock, 3)
 
         new_address = ShippingAddress.objects.last()
         self.assertEqual(new_address.first_name, "New First")
@@ -254,6 +262,10 @@ class OrderViewSetTest(TestCase):
         new_order_obj = Order.objects.last()
         self.assertEqual(new_order_obj.user, self.user)
         self.assertIsNone(new_order_obj.shipping_address)
+
+        # neither product's n_sotck should be updated
+        self.assertEqual(Product.objects.all()[0].n_stock, 1)
+        self.assertEqual(Product.objects.all()[1].n_stock, 5)
 
         new_order_item_objs = OrderItem.objects.all()
         self.assertEqual(new_order_item_objs[0].product, self.product1)

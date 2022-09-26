@@ -13,6 +13,10 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsStaffOrOwnerOnly,)
 
+    def update_product_quantity(self, product, quantity):
+        product.n_stock -= quantity
+        product.save()
+
     def get_shipping_address_foreign_key(self, address_data):
         # Check if any item in order items require a shipping address.
         # Get existing address or create new address db entry if shipping address is required.
@@ -38,8 +42,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     def save_order_items(self, order_items, order):
         # Create OrderItem objects and add Order as a foreign key
         for item in order_items:
+            product = Product.objects.get(pk=item["product"])
             order_item = OrderItem.objects.create(
-                product=Product.objects.get(pk=item["product"]),
+                product=product,
                 order=order,
                 name=item["name"],
                 purchased_qty=item["qty"],
@@ -47,6 +52,10 @@ class OrderViewSet(viewsets.ModelViewSet):
                 price=item["price"],
                 image=item["image"],
             )
+
+            if order_item.type == "paper":
+                self.update_product_quantity(product, item["qty"])
+
             order_item.save()
 
     def create(self, request, *args, **kwargs):
