@@ -5,7 +5,7 @@ from accounts.serializers import ShippingAddressSerializer
 from .models import Order
 
 
-class OrderSerializer(serializers.Serializer):
+class OrderSerializer(serializers.ModelSerializer):
     shipping_address = ShippingAddressSerializer(many=False)
     user = serializers.StringRelatedField(many=False)
 
