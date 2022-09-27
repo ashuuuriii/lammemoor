@@ -1,0 +1,7 @@
+Hello {{ first_name }},
+
+Thanks for your order. Your e-patterns are attached to this email.
+Please don't hesitate to contact us if you have any questions about your patterns.
+
+Warm regards,
+Lammermoor Customer Service

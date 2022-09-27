@@ -1,0 +1,25 @@
+<p>Hello {{ first_name }},</p>
+<br />
+<p>
+  Thanks for your order. If you've ordered any paper patterns we'll let you know
+  once your item(s) have been dispatched.
+</p>
+<p>
+  You e-pattern(s) will be sent to this email address in a separate email
+  shortly.
+</p>
+<br />
+<p><strong>Order Summary:</strong></p>
+<p><strong>Total Price:</strong> £{{ total_price}}</p>
+<p><strong>Sub-total:</strong> £{{ subtotal_price}}</p>
+<p><strong>Shipping:</strong> £{{ shipping_price }}</p>
+<p><strong>Items:</strong></p>
+<ul>
+  {% for item in items %}
+  <li>{{ item.name }}-{{ item.type }}: £{{ item.price }}</li>
+  {% endfor %}
+</ul>
+<br />
+<p>Warm regards,</p>
+<p>Lammermoor Customer Service</p>
+

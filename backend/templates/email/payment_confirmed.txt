@@ -1,0 +1,16 @@
+Hello {{ first_name }},
+
+Thanks for your order. If you've ordered any paper patterns we'll let you know once your item(s) have been dispatched.
+You e-pattern(s) will be sent to this email address in a separate email shortly.
+
+Order Summary:
+Total Price: £{{ total_price}}
+Sub-total: £{{ sub_total_price}}
+Shipping: £{{ shipping_price }}
+Items:
+{% for item in items %}
+{{ item.name }}-{{ item.type }}: £{{ item.price }}
+{% endfor %}
+
+Warm regards,
+Lammermoor Customer Service
