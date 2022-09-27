@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 import Message from "./Message";
-import { REACT_APP_URL } from "../constants/appConstants";
+import { PAYMENT_CONFIRM_URL } from "../constants/appConstants";
 
 const StripePaymentForm = () => {
   const stripe = useStripe();
@@ -33,7 +33,7 @@ const StripePaymentForm = () => {
 
     const { error } = await stripe.confirmPayment({
       elements,
-      confirmParams: { return_url: REACT_APP_URL },
+      confirmParams: { return_url: PAYMENT_CONFIRM_URL },
     });
 
     if (error.type === "card_error" || error.type === "validation_error") {

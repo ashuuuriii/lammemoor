@@ -24,7 +24,6 @@ const PaymentScreen = () => {
 
   const orderPaymentIntent = useSelector((state) => state.orderPaymentIntent);
   const { loading, clientSecret, error } = orderPaymentIntent;
-  console.log(clientSecret);
 
   useEffect(() => {
     if (order) {
