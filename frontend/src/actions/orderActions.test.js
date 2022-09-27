@@ -3,12 +3,15 @@ import moxios from "moxios";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
-import { createOrder } from "./orderActions";
+import { createOrder, fetchPaymentIntent } from "./orderActions";
 
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
+  ORDER_PAYMENT_INTENT_REQUEST,
+  ORDER_PAYMENT_INTENT_SUCCESS,
+  ORDER_PAYMENT_INTENT_FAIL,
 } from "../constants/orderContants";
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants";
 
@@ -140,5 +143,73 @@ describe("Test createOrder action", () => {
         expect(actualActions).toEqual(expectedActions);
         expect(localStorage.removeItem).not.toHaveBeenCalled();
       });
+  });
+});
+
+describe("Test fetchPaymentIntent action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("Payment intent succesfully fetched", () => {
+    const expectedPaymentData = {
+      clientSecret: "secretkey",
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          clientSecret: "secretkey",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_PAYMENT_INTENT_REQUEST },
+      {
+        type: ORDER_PAYMENT_INTENT_SUCCESS,
+        payload: expectedPaymentData,
+      },
+    ];
+
+    return store.dispatch(fetchPaymentIntent(1)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("invalid order id", () => {
+    const expectedAddressData = "error";
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 403,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_PAYMENT_INTENT_REQUEST },
+      {
+        type: ORDER_PAYMENT_INTENT_FAIL,
+        payload: expectedAddressData,
+      },
+    ];
+
+    return store.dispatch(fetchPaymentIntent(12)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
   });
 });
