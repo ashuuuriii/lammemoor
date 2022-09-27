@@ -1,12 +1,15 @@
 import "@testing-library/jest-dom";
 
-import { orderCreateReducer } from "./orderReducers";
+import { orderCreateReducer, orderPaymentIntentReducer } from "./orderReducers";
 
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
   ORDER_CREATE_RESET,
+  ORDER_PAYMENT_INTENT_REQUEST,
+  ORDER_PAYMENT_INTENT_SUCCESS,
+  ORDER_PAYMENT_INTENT_FAIL,
 } from "../constants/orderContants";
 
 const initialState = {};
@@ -56,6 +59,48 @@ describe("Test orderCreateReduce", () => {
 
     const reducer = orderCreateReducer(state, {
       type: ORDER_CREATE_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test orderPaymentIntentReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = initialState;
+  });
+
+  it("test ORDER_PAYMENT_INTENT_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = orderPaymentIntentReducer(state, {
+      type: ORDER_PAYMENT_INTENT_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_PAYMENT_INTENT_SUCCESS", () => {
+    const clientSecret = "secretkey";
+    const expectedState = {
+      loading: false,
+      clientSecret: clientSecret,
+    };
+
+    const reducer = orderPaymentIntentReducer(state, {
+      type: ORDER_PAYMENT_INTENT_SUCCESS,
+      payload: {clientSecret},
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("ORDER_PAYMENT_INTENT_FAIL", () => {
+    const expectedData = "failed messsage";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = orderPaymentIntentReducer(state, {
+      type: ORDER_PAYMENT_INTENT_FAIL,
+      payload: expectedData,
     });
     expect(reducer).toEqual(expectedState);
   });

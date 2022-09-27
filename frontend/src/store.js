@@ -16,7 +16,10 @@ import {
   productDetailsReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
-import { orderCreateReducer } from "./reducers/orderReducers";
+import {
+  orderCreateReducer,
+  orderPaymentIntentReducer,
+} from "./reducers/orderReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -42,6 +45,7 @@ const store = configureStore({
     productDetails: productDetailsReducer,
     cart: cartReducer,
     orderCreate: orderCreateReducer,
+    orderPaymentIntent: orderPaymentIntentReducer,
   },
   devTools: true,
   preloadedState: {
