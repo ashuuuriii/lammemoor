@@ -10,20 +10,33 @@ const PriceCard = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order } = orderCreate;
+
   useEffect(() => {
-    const tempSubtotal = cartItems.reduce(
-      (acc, item) => acc + Number(item.price) * Number(item.qty),
-      0
-    );
-    const tempShipping = cartItems.some((item) => item.itemType === "paper")
-      ? tempSubtotal >= 50
-        ? 0
-        : 5
-      : 0;
-    setSubtotal(tempSubtotal.toFixed(2));
-    setShipping(tempShipping.toFixed(2));
-    setTotal((tempSubtotal + tempShipping).toFixed(2));
-  }, [cartItems]);
+    // get display prices from cartItems before an order has been created.
+    // cart clears after an order is made.
+    // get display prices from order once order has been created.
+    // Stripe payment amount are set in backend to prevent frontend manipulation.
+    if (cartItems.length > 0) {
+      const tempSubtotal = cartItems.reduce(
+        (acc, item) => acc + Number(item.price) * Number(item.qty),
+        0
+      );
+      const tempShipping = cartItems.some((item) => item.itemType === "paper")
+        ? tempSubtotal >= 50
+          ? 0
+          : 5
+        : 0;
+      setSubtotal(tempSubtotal.toFixed(2));
+      setShipping(tempShipping.toFixed(2));
+      setTotal((tempSubtotal + tempShipping).toFixed(2));
+    } else if (order) {
+      setSubtotal(order.subtotal_price);
+      setShipping(order.shipping_price);
+      setTotal(order.total_price);
+    }
+  }, [cartItems, order]);
 
   return (
     <Card>
