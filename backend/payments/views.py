@@ -8,6 +8,7 @@ from rest_framework import status, permissions
 import stripe
 
 from orders.models import Order, OrderItem
+from .tasks import send_email, update_delivery_status
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -42,11 +43,6 @@ class StripeWebhookView(APIView):
         order.is_paid = True
         order.save()
 
-    def update_delivery_status(self, order, order_items, sent_file_objs):
-        if len(order_items) == len(sent_file_objs):
-            order.is_delivered = True
-            order.save()
-
     def send_order_confirm_email(self, order, order_items, user):
         context = {
             "first_name": user.first_name,
@@ -62,15 +58,10 @@ class StripeWebhookView(APIView):
         email_txt_message = render_to_string(
             "email/payment_confirmed.txt", context=context
         )
+        subject = "Thank you for you order"
+        recipient = [user.email]
 
-        msg = EmailMultiAlternatives(
-            subject="Thank you for you order",
-            body=email_txt_message,
-            from_email="noreply@somehost.local",
-            to=[user.email],
-        )
-        msg.attach_alternative(email_html_message, "text/html")
-        msg.send()
+        send_email.delay(email_html_message, email_txt_message, subject, recipient)
 
     def fulfill_e_product_orders(self, order, order_items, user):
         files_to_send = order_items.filter(type="pdf")
@@ -88,22 +79,24 @@ class StripeWebhookView(APIView):
         email_txt_message = render_to_string(
             "email/e_pattern_fulfillment.txt", context=context
         )
+        subject = "Your e-patterns are ready!"
+        recipient = [user.email]
+        attachment_paths = [
+            settings.MEDIA_ROOT + "/" + str(file.product.pdf) for file in files_to_send
+        ]
+        mimetype = "application/pdf"
 
-        msg = EmailMultiAlternatives(
-            subject="Your e-patterns are ready!",
-            body=email_txt_message,
-            from_email="noreply@somehost.local",
-            to=[user.email],
+        send_email.apply_async(
+            args=[
+                email_html_message,
+                email_txt_message,
+                subject,
+                recipient,
+                attachment_paths,
+                mimetype,
+            ],
+            link=update_delivery_status(order, order_items, files_to_send),
         )
-
-        for file in files_to_send:
-            pdf_path = settings.MEDIA_ROOT + "/" + str(file.product.pdf)
-            msg.attach_file(pdf_path, "application/pdf")
-
-        msg.attach_alternative(email_html_message, "text/html")
-        msg.send()
-
-        self.update_delivery_status(order, order_items, files_to_send)
 
     def post(self, request, *args, **kwargs):
         data = request.body
@@ -130,7 +123,6 @@ class StripeWebhookView(APIView):
             order_items = OrderItem.objects.filter(order=order)
             user = order.user
 
-            # TODO: set up async emails to prevent Stripe from retrying event
             self.update_payment_status(order)
             self.send_order_confirm_email(order, order_items, user)
             self.fulfill_e_product_orders(order, order_items, user)
