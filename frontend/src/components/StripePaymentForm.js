@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Row, Spinner } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   PaymentElement,
   useStripe,
@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 import Message from "./Message";
-import { PAYMENT_CONFIRM_URL } from "../constants/appConstants";
+import { ORDER_CONFIRM_URL } from "../constants/orderContants";
 
 const StripePaymentForm = () => {
   const stripe = useStripe();
@@ -19,6 +19,9 @@ const StripePaymentForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order } = orderCreate;
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -33,7 +36,7 @@ const StripePaymentForm = () => {
 
     const { error } = await stripe.confirmPayment({
       elements,
-      confirmParams: { return_url: PAYMENT_CONFIRM_URL },
+      confirmParams: { return_url: ORDER_CONFIRM_URL + `/${order.id}` },
     });
 
     if (error.type === "card_error" || error.type === "validation_error") {

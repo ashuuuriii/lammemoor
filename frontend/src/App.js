@@ -44,7 +44,7 @@ function App() {
             <Route path="/cart/" element={<CartScreen />} />
             <Route path="/order/confirm" element={<OrderConfirmScreen />} />
             <Route
-              path="/order/payment/payment_confirm"
+              path="/order/payment/payment_confirm/:id"
               element={<PaymentConfirmScreen />}
             />
             <Route path="/order/payment" element={<PaymentScreen />} />
