@@ -1,9 +1,9 @@
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
-from django.core.mail import EmailMultiAlternatives
-from django.urls import reverse
 from django.template.loader import render_to_string
 from backend import settings
+
+from .tasks import send_email
 
 
 @receiver(reset_password_token_created)
@@ -27,17 +27,7 @@ def password_reset_token_created(
     email_txt_message = render_to_string(
         "email/user_reset_password.txt", context=context
     )
+    subject = "Password reset for Lammermoor"
+    recipient = reset_password_token.user.email
 
-    # TODO: make this async
-    msg = EmailMultiAlternatives(
-        # title:
-        "Password Reset for {title}".format(title="Some website title"),
-        # message:
-        email_txt_message,
-        # from:
-        "noreply@somehost.local",  # TODO: replace when setting up SMTP server
-        # to:
-        [reset_password_token.user.email],
-    )
-    msg.attach_alternative(email_html_message, "text/html")
-    msg.send()
+    send_email.delay(email_html_message, email_txt_message, subject, recipient)
