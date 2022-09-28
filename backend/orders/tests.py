@@ -454,3 +454,34 @@ class OrderViewSetTest(TestCase):
             response.data["detail"],
             "No shipping address provided with physical product.",
         )
+
+    def test_order_detail_view(self):
+        order = Order.objects.create(
+            user=self.user,
+            subtotal_price=10.75,
+            shipping_price=0.00,
+            total_price=10.75,
+        )
+
+        order_item = OrderItem.objects.create(
+            product=self.product1,
+            order=order,
+            name=self.product1.name,
+            type="pdf",
+            price=self.product1.price,
+            image=self.product1.image,
+        )
+
+        # test anon user
+        response = self.client.get(reverse("orders-detail", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # test order creator
+        self.client.force_authenticate(self.user)
+        response = self.client.get(reverse("orders-detail", kwargs={"pk": 1}))
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, order_item)
+        self.assertEqual(data["subtotal_price"], str(order.subtotal_price))
+        self.assertEqual(data["total_price"], str(order.total_price))
