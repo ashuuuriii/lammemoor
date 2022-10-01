@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from rest_framework import status
 
-from .models import Product
+from .models import Product, Review
 
 
 class ProductViewSetTest(TestCase):
@@ -27,12 +27,21 @@ class ProductViewSetTest(TestCase):
             pdf_price=3.31,
             n_stock=0,
         )
+        self.review = Review.objects.create(
+            user=self.user,
+            product=self.product,
+            name="Name",
+            rating=3,
+            title="Review Title",
+            comment="Lorem Ipsum, Lorem Ipsum"
+        )
 
     def test_api_list_view(self):
         response = self.client.get(reverse("products-list"))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.product)
+        self.assertContains(response, self.review)
 
     def test_api_detail_view(self):
         response = self.client.get(reverse("products-detail", kwargs={"pk": 1}))
@@ -40,3 +49,4 @@ class ProductViewSetTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.product)
         self.assertEqual(response.data["name"], "Product Name")
+        self.assertContains(response, self.review)
