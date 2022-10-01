@@ -1,6 +1,10 @@
 import "@testing-library/jest-dom";
 
-import { productListReducer, productDetailsReducer } from "./productReducers";
+import {
+  productListReducer,
+  productDetailsReducer,
+  productReviewCreateReducer,
+} from "./productReducers";
 
 import {
   PRODUCT_LIST_REQUEST,
@@ -9,6 +13,10 @@ import {
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_REVIEW_CREATE_REQUEST,
+  PRODUCT_REVIEW_CREATE_SUCCESS,
+  PRODUCT_REVIEW_CREATE_FAIL,
+  PRODUCT_REVIEW_CREATE_RESET,
 } from "../constants/productConstants";
 
 const initialState = { userInfo: null };
@@ -54,7 +62,7 @@ describe("Test productDetailsReducer", () => {
   let state;
 
   beforeEach(() => {
-    state = { ...initialState, product: { reviews: []} };
+    state = { product: { reviews: []} };
   });
 
   it("test PRODUCT_DETAILS_REQUEST", () => {
@@ -84,6 +92,52 @@ describe("Test productDetailsReducer", () => {
     const reducer = productDetailsReducer(state, {
       type: PRODUCT_DETAILS_FAIL,
       payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test productReviewCreateReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = { ...initialState, product: { reviews: [] } };
+  });
+
+  it("test PRODUCT_REVIEW_CREATE_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = productReviewCreateReducer(state, {
+      type: PRODUCT_REVIEW_CREATE_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test PRODUCT_REVIEW_CREATE_SUCCESS", () => {
+    const expectedState = { loading: false, success: true };
+
+    const reducer = productReviewCreateReducer(state, {
+      type: PRODUCT_REVIEW_CREATE_SUCCESS,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test PRODUCT_REVIEW_CREATE_FAIL", () => {
+    const expectedData = "failed data";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = productReviewCreateReducer(state, {
+      type: PRODUCT_REVIEW_CREATE_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test PRODUCT_REVIEW_CREATE_RESET", () => {
+    const expectedState = {};
+
+    const reducer = productReviewCreateReducer(state, {
+      type: PRODUCT_REVIEW_CREATE_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });
