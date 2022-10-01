@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 import CartAdder from "../components/CartAdder";
 import Rating from "../components/Rating";
 import Message from "../components/Message";
-import { getProductDetails } from "../actions/productActions";
+import { getProductDetails, createReview } from "../actions/productActions";
 import { PRODUCT_CATEGORIES } from "../constants/productConstants";
 
 const ProductDetailScreen = () => {
@@ -23,6 +23,9 @@ const ProductDetailScreen = () => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  const productReviewCreate = useSelector((state) => state.productReviewCreate);
+  const { loading: reviewLoading, success, error: reviewError } = productReviewCreate;
+
   const redirectUrl = `/login?redirect=/product/${productId}`;
 
   const userInfo = localStorage.getItem("userInfo");
@@ -33,8 +36,13 @@ const ProductDetailScreen = () => {
       setMessage("You must select a rating.");
     } else {
       setMessage("");
-      // add review post action dispatch here
-      console.log("dispatch");
+      const review = {
+        product_id: productId,
+        rating: rating,
+        title: title,
+        comment: comment,
+      };
+      dispatch(createReview(review));
     }
   };
 
@@ -101,6 +109,15 @@ const ProductDetailScreen = () => {
               <ListGroup.Item>
                 <h3>Write a review</h3>
                 {message && <Message variant="danger">{message}</Message>}
+                {reviewLoading && <Loader />}
+                {success && (
+                  <Message variant="success">
+                    Thank you for your review.
+                  </Message>
+                )}
+                {reviewError && (
+                  <Message variant="danger">{reviewError}</Message>
+                )}
                 {userInfo ? (
                   <Form onSubmit={submitHandler}>
                     <Form.Group controlId="rating">
@@ -134,11 +151,15 @@ const ProductDetailScreen = () => {
                         onChange={(e) => setComment(e.target.value)}
                       />
                     </Form.Group>
-                    <Button type="submit" className="my-3 d-none d-lg-block">
+                    <Button
+                      type="submit"
+                      className="my-3 d-none d-lg-block"
+                      disabled={success}
+                    >
                       Submit
                     </Button>
                     <Row className="d-lg-none d-block mx-0">
-                      <Button type="submit" className="my-3">
+                      <Button type="submit" className="my-3" disabled={success}>
                         Submit
                       </Button>
                     </Row>
