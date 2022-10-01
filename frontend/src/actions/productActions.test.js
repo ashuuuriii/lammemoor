@@ -204,6 +204,7 @@ describe("Test getProductDetails action", () => {
         type: PRODUCT_DETAILS_SUCCESS,
         payload: expectedDetailData,
       },
+      { type: PRODUCT_REVIEW_CREATE_RESET },
     ];
 
     return store.dispatch(getProductDetails(0)).then(() => {

@@ -36,6 +36,7 @@ export const getProductDetails = (id) => async (dispatch) => {
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,
     });
+    dispatch({ type: PRODUCT_REVIEW_CREATE_RESET });
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
