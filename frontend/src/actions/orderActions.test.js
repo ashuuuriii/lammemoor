@@ -3,7 +3,11 @@ import moxios from "moxios";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
-import { createOrder, fetchPaymentIntent } from "./orderActions";
+import {
+  createOrder,
+  fetchPaymentIntent,
+  getOrderDetail,
+} from "./orderActions";
 
 import {
   ORDER_CREATE_REQUEST,
@@ -12,6 +16,9 @@ import {
   ORDER_PAYMENT_INTENT_REQUEST,
   ORDER_PAYMENT_INTENT_SUCCESS,
   ORDER_PAYMENT_INTENT_FAIL,
+  ORDER_DETAILS_REQUEST,
+  ORDER_DETAILS_SUCCESS,
+  ORDER_DETAILS_FAIL,
 } from "../constants/orderContants";
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants";
 
@@ -208,6 +215,86 @@ describe("Test fetchPaymentIntent action", () => {
     ];
 
     return store.dispatch(fetchPaymentIntent(12)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test getOrderDetail action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("Order details successfully requested.", () => {
+    const expectedOrderDetail = {
+      user: "user",
+      total_price: "5.25",
+      order_items: [
+        { id: 1, name: "item1" },
+        { id: 2, name: "item2" },
+      ],
+      shipping_address: { address: "address", city: "city" },
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          user: "user",
+          total_price: "5.25",
+          order_items: [
+            { id: 1, name: "item1" },
+            { id: 2, name: "item2" },
+          ],
+          shipping_address: { address: "address", city: "city" },
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_DETAILS_REQUEST },
+      {
+        type: ORDER_DETAILS_SUCCESS,
+        payload: expectedOrderDetail,
+      },
+    ];
+
+    return store.dispatch(getOrderDetail(1)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("invalid order id", () => {
+    const expectedOrderDetail = "error";
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 403,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_DETAILS_REQUEST },
+      {
+        type: ORDER_DETAILS_FAIL,
+        payload: expectedOrderDetail,
+      },
+    ];
+
+    return store.dispatch(getOrderDetail(12)).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });
