@@ -18,6 +18,7 @@ import OrderScreen from "./screens/OrderScreen";
 import OrderConfirmScreen from "./screens/OrderConfirmScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PaymentConfirmScreen from "./screens/PaymentConfirmScreen";
+import OrderListScreen from "./screens/OrderListScreen";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               element={<PasswordResetTokenScreen />}
             />
             <Route path="accounts/manage/" element={<ManageAccountScreen />} />
+            <Route path="accounts/orders/" element={<OrderListScreen />} />
             <Route path="edit_address/:id" element={<EditAddressScreen />} />
             <Route path="/shop/" element={<ProductListScreen />} />
             <Route path="/product/:id" element={<ProductDetailScreen />} />
