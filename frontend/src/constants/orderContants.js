@@ -12,3 +12,8 @@ export const ORDER_PAYMENT_INTENT_FAIL = "ORDER_PAYMENT_INTENT_FAIL";
 
 export const ORDER_CONFIRM_URL =
   "http://localhost:3000/order/payment/payment_confirm";
+
+export const ORDER_DETAILS_REQUEST = "ORDER_DETAILS_REQUEST";
+export const ORDER_DETAILS_SUCCESS = "ORDER_DETAILS_SUCCESS";
+export const ORDER_DETAILS_FAIL = "ORDER_DETAILS_FAIL";
+export const ORDER_DETAILS_RESET = "ORDER_DETAILS_RESET";

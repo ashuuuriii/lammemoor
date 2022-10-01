@@ -1,6 +1,10 @@
 import "@testing-library/jest-dom";
 
-import { orderCreateReducer, orderPaymentIntentReducer } from "./orderReducers";
+import {
+  orderCreateReducer,
+  orderPaymentIntentReducer,
+  orderDetailReducer,
+} from "./orderReducers";
 
 import {
   ORDER_CREATE_REQUEST,
@@ -10,6 +14,10 @@ import {
   ORDER_PAYMENT_INTENT_REQUEST,
   ORDER_PAYMENT_INTENT_SUCCESS,
   ORDER_PAYMENT_INTENT_FAIL,
+  ORDER_DETAILS_REQUEST,
+  ORDER_DETAILS_SUCCESS,
+  ORDER_DETAILS_FAIL,
+  ORDER_DETAILS_RESET,
 } from "../constants/orderContants";
 
 const initialState = {};
@@ -89,7 +97,7 @@ describe("Test orderPaymentIntentReducer", () => {
 
     const reducer = orderPaymentIntentReducer(state, {
       type: ORDER_PAYMENT_INTENT_SUCCESS,
-      payload: {clientSecret},
+      payload: { clientSecret },
     });
     expect(reducer).toEqual(expectedState);
   });
@@ -101,6 +109,57 @@ describe("Test orderPaymentIntentReducer", () => {
     const reducer = orderPaymentIntentReducer(state, {
       type: ORDER_PAYMENT_INTENT_FAIL,
       payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test orderDetailReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = initialState;
+  });
+
+  it("test ORDER_DETAILS_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = orderDetailReducer(state, {
+      type: ORDER_DETAILS_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test OORDER_DETAILS_SUCCESS", () => {
+    const expectedOrder = { id: 1, total_price: 1.26 };
+    const expectedState = {
+      loading: false,
+      order: expectedOrder,
+    };
+
+    const reducer = orderDetailReducer(state, {
+      type: ORDER_DETAILS_SUCCESS,
+      payload: expectedOrder,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_DETAILS_FAIL", () => {
+    const expectedData = "failed messsage";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = orderDetailReducer(state, {
+      type: ORDER_DETAILS_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_DETAILS_RESET", () => {
+    const expectedState = {};
+
+    const reducer = orderDetailReducer(state, {
+      type: ORDER_DETAILS_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });

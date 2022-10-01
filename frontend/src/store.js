@@ -19,6 +19,7 @@ import { cartReducer } from "./reducers/cartReducer";
 import {
   orderCreateReducer,
   orderPaymentIntentReducer,
+  orderDetailReducer,
 } from "./reducers/orderReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
@@ -46,6 +47,7 @@ const store = configureStore({
     cart: cartReducer,
     orderCreate: orderCreateReducer,
     orderPaymentIntent: orderPaymentIntentReducer,
+    orderDetail: orderDetailReducer,
   },
   devTools: true,
   preloadedState: {
