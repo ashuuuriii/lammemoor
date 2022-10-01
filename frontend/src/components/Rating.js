@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Rating = ({ value, text, color }) => {
+const Rating = ({ value, color, text = null }) => {
   return (
-    <div className="rating mb-3">
+    <div className="rating my-0">
       <span>
         <i
           style={{ color }}

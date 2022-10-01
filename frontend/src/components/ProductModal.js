@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 
 import CartAdder from "./CartAdder";
+import Rating from "./Rating";
 
-import "../custom_properties.css"
+import "../custom_properties.css";
 
 const ProductModal = ({ product }) => {
   const [show, setShow] = useState(false);
@@ -21,6 +22,11 @@ const ProductModal = ({ product }) => {
           <h2>{product.name}</h2>
         </Modal.Header>
         <Modal.Body>
+          <Rating
+            value={product.rating}
+            text={`(${product.n_reviews} customer reviews)`}
+            color={"#000"}
+          />
           {product.pdf_price ? (
             <p>
               <strong>
