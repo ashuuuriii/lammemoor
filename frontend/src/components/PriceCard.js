@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const PriceCard = () => {
+const PriceCard = ({ orderObj = null }) => {
   const [subtotal, setSubtotal] = useState((0).toFixed(2));
   const [shipping, setShipping] = useState((0).toFixed(2));
   const [total, setTotal] = useState((0).toFixed(2));
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { order } = orderCreate;
 
   useEffect(() => {
     // get display prices from cartItems before an order has been created.
@@ -31,12 +28,12 @@ const PriceCard = () => {
       setSubtotal(tempSubtotal.toFixed(2));
       setShipping(tempShipping.toFixed(2));
       setTotal((tempSubtotal + tempShipping).toFixed(2));
-    } else if (order) {
-      setSubtotal(order.subtotal_price);
-      setShipping(order.shipping_price);
-      setTotal(order.total_price);
+    } else if (orderObj) {
+      setSubtotal(orderObj.subtotal_price);
+      setShipping(orderObj.shipping_price);
+      setTotal(orderObj.total_price);
     }
-  }, [cartItems, order]);
+  }, [cartItems, orderObj]);
 
   return (
     <Card>
