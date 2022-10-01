@@ -48,7 +48,7 @@ const PaymentScreen = () => {
             </Elements>
           </Col>
           <Col lg={4}>
-            <PriceCard />
+            <PriceCard orderObj={order} />
           </Col>
         </Row>
       )}
