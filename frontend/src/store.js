@@ -14,6 +14,7 @@ import {
 import {
   productListReducer,
   productDetailsReducer,
+  productReviewCreateReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
 import {
@@ -44,6 +45,7 @@ const store = configureStore({
     userRemoveAddress: userRemoveAddressReducer,
     productList: productListReducer,
     productDetails: productDetailsReducer,
+    productReviewCreate: productReviewCreateReducer,
     cart: cartReducer,
     orderCreate: orderCreateReducer,
     orderPaymentIntent: orderPaymentIntentReducer,

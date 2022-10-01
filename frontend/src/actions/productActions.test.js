@@ -3,7 +3,11 @@ import moxios from "moxios";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 
-import { getProductsList, getProductDetails } from "./productActions";
+import {
+  getProductsList,
+  getProductDetails,
+  createReview,
+} from "./productActions";
 
 import {
   PRODUCT_LIST_REQUEST,
@@ -12,10 +16,14 @@ import {
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_REVIEW_CREATE_REQUEST,
+  PRODUCT_REVIEW_CREATE_SUCCESS,
+  PRODUCT_REVIEW_CREATE_FAIL,
+  PRODUCT_REVIEW_CREATE_RESET,
 } from "../constants/productConstants";
 
 const mockStore = configureMockStore([thunk]);
-const initialState = { userInfo: null };
+const initialState = { userLogin: { userInfo: "token123" } };
 
 describe("Test getProductsList action", () => {
   let store;
@@ -239,5 +247,75 @@ describe("Test getProductDetails action", () => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });
+  });
+});
+
+describe("Test createReview action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("review succesfully create", () => {
+    const expectedMessage = { detail: "success" };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 201,
+        response: [
+          {
+            detail: "success",
+          },
+        ],
+      });
+    });
+
+    const expectedActions = [
+      { type: PRODUCT_REVIEW_CREATE_REQUEST },
+      {
+        type: PRODUCT_REVIEW_CREATE_SUCCESS,
+      },
+    ];
+
+    return store
+      .dispatch(createReview({ product_id: 2, rating: 3 }))
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+      });
+  });
+
+  it("review already exists raises an error", () => {
+    const expectedDetailData = "error";
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 400,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: PRODUCT_REVIEW_CREATE_REQUEST },
+      {
+        type: PRODUCT_REVIEW_CREATE_FAIL,
+        payload: expectedDetailData,
+      },
+    ];
+
+    return store
+      .dispatch(createReview({ product_id: 2, rating: 3 }))
+      .then(() => {
+        const actualActions = store.getActions();
+        expect(actualActions).toEqual(expectedActions);
+      });
   });
 });
