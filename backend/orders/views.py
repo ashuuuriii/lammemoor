@@ -2,6 +2,7 @@ import decimal
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Order, OrderItem
 from accounts.models import ShippingAddress
@@ -13,6 +14,7 @@ from .permissions import IsStaffOrOwnerOnly
 PRICE_DECIMAL_PRECISION = 7
 FREE_SHIPPING_CUTOFF = "50.00"
 SHIPPING_PRICE = "5.00"
+ORDERS_PER_PAGE = 5
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -130,3 +132,27 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.save()
 
             return Response(self.serializer_class(order, many=False).data)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        queryset = user.order_set.all().order_by("-created_at")
+
+        page = request.query_params.get("page")
+        paginator = Paginator(queryset, ORDERS_PER_PAGE)
+
+        try:
+            orders = paginator.page(page)
+        except PageNotAnInteger:
+            orders = paginator.page(1)
+        except EmptyPage:
+            orders = paginator.page(paginator.num_pages)
+
+        if page == None or page == "":
+            page = 1
+
+        page = int(page)
+        serializer = self.serializer_class(orders, many=True)
+
+        return Response(
+            {"orders": serializer.data, "page": page, "pages": paginator.num_pages}
+        )

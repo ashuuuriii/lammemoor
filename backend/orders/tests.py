@@ -485,3 +485,30 @@ class OrderViewSetTest(TestCase):
         self.assertContains(response, order_item)
         self.assertEqual(data["subtotal_price"], str(order.subtotal_price))
         self.assertEqual(data["total_price"], str(order.total_price))
+
+    def test_order_list_view(self):
+        order = Order.objects.create(
+            user=self.user,
+            subtotal_price=10.75,
+            shipping_price=0.00,
+            total_price=10.75,
+        )
+
+        order_item = OrderItem.objects.create(
+            product=self.product1,
+            order=order,
+            name=self.product1.name,
+            type="pdf",
+            price=self.product1.price,
+            image=self.product1.image,
+        )
+
+        self.client.force_authenticate(self.user)
+        response = self.client.get(reverse("orders-list"))
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, order_item)
+        self.assertEqual(data["orders"][0]["user"], str(self.user))
+        self.assertEqual(data["page"], 1)
+        self.assertEqual(data["pages"], 1)
