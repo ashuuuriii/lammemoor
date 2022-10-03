@@ -4,6 +4,7 @@ import {
   orderCreateReducer,
   orderPaymentIntentReducer,
   orderDetailReducer,
+  orderListReducer,
 } from "./orderReducers";
 
 import {
@@ -18,6 +19,10 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_RESET,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_RESET,
 } from "../constants/orderContants";
 
 const initialState = {};
@@ -160,6 +165,62 @@ describe("Test orderDetailReducer", () => {
 
     const reducer = orderDetailReducer(state, {
       type: ORDER_DETAILS_RESET,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+});
+
+describe("Test orderListReducer", () => {
+  let state;
+
+  beforeEach(() => {
+    state = initialState;
+  });
+
+  it("test ORDER_LIST_REQUEST", () => {
+    const expectedState = { loading: true };
+
+    const reducer = orderListReducer(state, {
+      type: ORDER_LIST_REQUEST,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_LIST_SUCCESS", () => {
+    const expectedOrders = [
+      { id: 1, total_price: 1.26 },
+      { id: 2, total_price: 1.26 },
+    ];
+    const expectedState = {
+      loading: false,
+      orders: expectedOrders,
+      page: 1,
+      pages: 1,
+    };
+
+    const reducer = orderListReducer(state, {
+      type: ORDER_LIST_SUCCESS,
+      payload: { orders: expectedOrders, page: 1, pages: 1 },
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_LIST_FAIL", () => {
+    const expectedData = "failed messsage";
+    const expectedState = { loading: false, error: expectedData };
+
+    const reducer = orderListReducer(state, {
+      type: ORDER_LIST_FAIL,
+      payload: expectedData,
+    });
+    expect(reducer).toEqual(expectedState);
+  });
+
+  it("test ORDER_LIST_RESET", () => {
+    const expectedState = {};
+
+    const reducer = orderListReducer(state, {
+      type: ORDER_LIST_RESET,
     });
     expect(reducer).toEqual(expectedState);
   });

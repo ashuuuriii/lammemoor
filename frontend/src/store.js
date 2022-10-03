@@ -21,6 +21,7 @@ import {
   orderCreateReducer,
   orderPaymentIntentReducer,
   orderDetailReducer,
+  orderListReducer,
 } from "./reducers/orderReducers";
 
 const preloadedUserInfo = localStorage.getItem("userInfo")
@@ -50,6 +51,7 @@ const store = configureStore({
     orderCreate: orderCreateReducer,
     orderPaymentIntent: orderPaymentIntentReducer,
     orderDetail: orderDetailReducer,
+    orderList: orderListReducer,
   },
   devTools: true,
   preloadedState: {
