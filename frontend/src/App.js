@@ -20,6 +20,7 @@ import OrderListScreen from "./screens/OrderListScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PaymentConfirmScreen from "./screens/PaymentConfirmScreen";
+import ContactScreen from "./screens/ContactScreen";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             />
             <Route path="/order/payment" element={<PaymentScreen />} />
             <Route path="/order/" element={<OrderScreen />} />
+            <Route path="/contact" element={<ContactScreen />} />
           </Routes>
         </Container>
       </main>
