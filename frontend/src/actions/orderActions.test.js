@@ -7,6 +7,7 @@ import {
   createOrder,
   fetchPaymentIntent,
   getOrderDetail,
+  getOrdersList,
 } from "./orderActions";
 
 import {
@@ -19,6 +20,9 @@ import {
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_FAIL,
 } from "../constants/orderContants";
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants";
 
@@ -295,6 +299,116 @@ describe("Test getOrderDetail action", () => {
     ];
 
     return store.dispatch(getOrderDetail(12)).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+});
+
+describe("Test getOrdersList action", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore(initialState);
+    moxios.install();
+  });
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it("Order list successfully requested.", () => {
+    const expectedOrderList = {
+      orders: [
+        {
+          user: "user",
+          total_price: "5.25",
+          order_items: [
+            { id: 1, name: "item1" },
+            { id: 2, name: "item2" },
+          ],
+          shipping_address: { address: "address", city: "city" },
+        },
+        {
+          user: "user",
+          total_price: "5.25",
+          order_items: [
+            { id: 1, name: "item1" },
+            { id: 2, name: "item2" },
+          ],
+          shipping_address: { address: "address", city: "city" },
+        },
+      ],
+      page: 1,
+      pages: 1,
+    };
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: {
+          orders: [
+            {
+              user: "user",
+              total_price: "5.25",
+              order_items: [
+                { id: 1, name: "item1" },
+                { id: 2, name: "item2" },
+              ],
+              shipping_address: { address: "address", city: "city" },
+            },
+            {
+              user: "user",
+              total_price: "5.25",
+              order_items: [
+                { id: 1, name: "item1" },
+                { id: 2, name: "item2" },
+              ],
+              shipping_address: { address: "address", city: "city" },
+            },
+          ],
+          page: 1,
+          pages: 1,
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_LIST_REQUEST },
+      {
+        type: ORDER_LIST_SUCCESS,
+        payload: expectedOrderList,
+      },
+    ];
+
+    return store.dispatch(getOrdersList("?page=")).then(() => {
+      const actualActions = store.getActions();
+      expect(actualActions).toEqual(expectedActions);
+    });
+  });
+
+  it("invalid user token", () => {
+    const expectedDetail = "error";
+
+    moxios.wait(function () {
+      let request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 403,
+        response: {
+          detail: "error",
+        },
+      });
+    });
+
+    const expectedActions = [
+      { type: ORDER_LIST_REQUEST },
+      {
+        type: ORDER_LIST_FAIL,
+        payload: expectedDetail,
+      },
+    ];
+
+    return store.dispatch(getOrdersList("?page=")).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });
