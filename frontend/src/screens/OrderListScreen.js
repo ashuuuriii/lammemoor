@@ -82,7 +82,7 @@ const OrderListScreen = () => {
                   </Col>
                   <Col md={2}>
                     <Row className="text-uppercase">Order # {order.id}</Row>
-                    <Link to={`/acounts/orders/${order.id}`}>
+                    <Link to={`/accounts/orders/${order.id}`}>
                       <Row>View order details</Row>
                     </Link>
                   </Col>
