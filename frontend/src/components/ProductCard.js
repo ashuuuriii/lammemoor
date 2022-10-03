@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -25,10 +25,18 @@ const ProductCard = ({ product }) => {
         ) : (
           <Card.Text>${product.price}</Card.Text>
         )}
+        {!product.pdf_price && product.n_stock < 1 ? (
+          <Badge bg="danger">Currently unavailable</Badge>
+        ) : null}
       </Card.Body>
       <Card.Footer>
         <LinkContainer to={`/product/${product.id}`}>
-          <Button>Select Options</Button>
+          <Button
+            type="button"
+            disabled={!product.pdf_price && product.n_stock < 1}
+          >
+            Select Options
+          </Button>
         </LinkContainer>
       </Card.Footer>
     </Card>

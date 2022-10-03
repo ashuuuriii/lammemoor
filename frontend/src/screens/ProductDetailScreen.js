@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Image, Button, ListGroup, Form } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Image,
+  Button,
+  ListGroup,
+  Form,
+  Badge,
+} from "react-bootstrap";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -87,6 +95,9 @@ const ProductDetailScreen = () => {
                 text={`(${product.n_reviews} customer reviews)`}
                 color={"#000"}
               />
+              {!product.pdf_price && product.n_stock < 1 ? (
+                <Badge bg="danger">Currently unavailable</Badge>
+              ) : null}
               <p className="mt-3">{product.description}</p>
               <h2>Purchase Options</h2>
               <CartAdder product={product} />
