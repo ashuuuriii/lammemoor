@@ -14,7 +14,7 @@ import {
   addNewAddress,
   getUserAddressDetail,
   updateAddress,
-  removeAddress
+  removeAddress,
 } from "../actions/userActions";
 
 import {
@@ -52,6 +52,11 @@ import {
   USER_REMOVE_ADDRESS_SUCCESS,
   USER_REMOVE_ADDRESS_FAIL,
 } from "../constants/userConstants";
+
+import {
+  ORDER_DETAILS_RESET,
+  ORDER_LIST_RESET,
+} from "../constants/orderContants";
 
 const mockStore = configureMockStore([thunk]);
 const initialState = { userInfo: null };
@@ -169,6 +174,8 @@ describe("Test logout action", () => {
       { type: USER_LOGOUT },
       { type: USER_GET_ADDRESSES_RESET },
       { type: USER_GET_ADDRESS_DETAIL_RESET },
+      { type: ORDER_DETAILS_RESET },
+      { type: ORDER_LIST_RESET },
     ];
     jest.spyOn(window.localStorage.__proto__, "removeItem");
 

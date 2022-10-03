@@ -36,6 +36,11 @@ import {
   USER_REMOVE_ADDRESS_FAIL,
 } from "../constants/userConstants";
 
+import {
+  ORDER_DETAILS_RESET,
+  ORDER_LIST_RESET,
+} from "../constants/orderContants";
+
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
@@ -78,6 +83,9 @@ export const logout = () => (dispatch) => {
   });
   dispatch({ type: USER_GET_ADDRESSES_RESET });
   dispatch({ type: USER_GET_ADDRESS_DETAIL_RESET });
+
+  dispatch({ type: ORDER_DETAILS_RESET });
+  dispatch({ type: ORDER_LIST_RESET });
 
   localStorage.removeItem("cartAddress");
 };
