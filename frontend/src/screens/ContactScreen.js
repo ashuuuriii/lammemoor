@@ -2,24 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "@formspree/react";
 import { Form, Button, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
 
 const ContactScreen = () => {
+  const [search, setSearch] = useSearchParams();
+  const presetSubject = search.get("order")
+    ? `Order # ${search.get("order")}, problem with ${search.get("product")}`
+    : "";
+
   const [state, handleSubmit] = useForm("xdojzgvn");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState(presetSubject);
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  if (state.succeeded) {
-    setStatus("Your message has been sent.");
-  }
 
   useEffect(() => {
     if (userInfo) {
@@ -30,10 +31,17 @@ const ContactScreen = () => {
     }
   }, [userInfo]);
 
+  if (state.succeeded) {
+    return (
+      <FormContainer>
+        <Message variant="success">Your message has been sent.</Message>
+      </FormContainer>
+    );
+  }
+
   return (
     <FormContainer>
       <h1>Contact Us</h1>
-      {status && <Message variant="success">{status}</Message>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="email">
           <Form.Label>Email Address (required)</Form.Label>

@@ -13,6 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
+import { LinkContainer } from "react-router-bootstrap";
 
 import Loader from "../components/Loader";
 import Paginator from "../components/Paginator";
@@ -108,9 +109,15 @@ const OrderListScreen = () => {
                         </Col>
                         <Col md={4}>
                           <Row>
-                            <Button className="mt-3" variant="primary">
-                              Problem with order
-                            </Button>
+                            <LinkContainer
+                              to={`/contact?order=${
+                                order.id
+                              }&product=${item.name.replace(/ /g, "+")}`}
+                            >
+                              <Button className="mt-3" variant="primary">
+                                Problem with order
+                              </Button>
+                            </LinkContainer>
                           </Row>
                           <HashLink
                             to={`/product/${item.product}/#review-section`}
