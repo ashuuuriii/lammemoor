@@ -100,7 +100,7 @@ const OrderListScreen = () => {
                           <Link to={`/products/${item.id}`}>
                             <p className="lead my-0">{item.name}</p>
                           </Link>
-                          {order.type === "pdf" ? (
+                          {item.type === "pdf" ? (
                             <p>E-pattern</p>
                           ) : (
                             <p>Paper pattern</p>
