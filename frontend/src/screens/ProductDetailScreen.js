@@ -24,7 +24,11 @@ const ProductDetailScreen = () => {
   const { loading, error, product } = productDetails;
 
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
-  const { loading: reviewLoading, success, error: reviewError } = productReviewCreate;
+  const {
+    loading: reviewLoading,
+    success,
+    error: reviewError,
+  } = productReviewCreate;
 
   const redirectUrl = `/login?redirect=/product/${productId}`;
 
@@ -106,7 +110,7 @@ const ProductDetailScreen = () => {
                   <p>There are no reviews for this item yet.</p>
                 </ListGroup.Item>
               )}
-              <ListGroup.Item>
+              <ListGroup.Item id="review-section">
                 <h3>Write a review</h3>
                 {message && <Message variant="danger">{message}</Message>}
                 {reviewLoading && <Loader />}
