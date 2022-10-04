@@ -36,8 +36,13 @@ describe("Test productListReducer", () => {
   });
 
   it("test PRODUCT_LIST_SUCCESS", () => {
-    const expectedData = "success data";
-    const expectedState = { loading: false, products: expectedData };
+    const expectedData = {products: "success data", page: 1, pages: 1};
+    const expectedState = {
+      loading: false,
+      products: expectedData.products,
+      page: expectedData.page,
+      pages: expectedData.pages,
+    };
 
     const reducer = productListReducer(state, {
       type: PRODUCT_LIST_SUCCESS,
@@ -62,7 +67,7 @@ describe("Test productDetailsReducer", () => {
   let state;
 
   beforeEach(() => {
-    state = { product: { reviews: []} };
+    state = { product: { reviews: [] } };
   });
 
   it("test PRODUCT_DETAILS_REQUEST", () => {
