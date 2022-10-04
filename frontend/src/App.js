@@ -21,6 +21,7 @@ import OrderDetailScreen from "./screens/OrderDetailScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PaymentConfirmScreen from "./screens/PaymentConfirmScreen";
 import ContactScreen from "./screens/ContactScreen";
+import NotFoundScreen from "./screens/NotFoundScreen";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             <Route path="/order/payment" element={<PaymentScreen />} />
             <Route path="/order/" element={<OrderScreen />} />
             <Route path="/contact" element={<ContactScreen />} />
+            <Route path="/*" element={<NotFoundScreen />} />
           </Routes>
         </Container>
       </main>
