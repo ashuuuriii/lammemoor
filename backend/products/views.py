@@ -1,16 +1,59 @@
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework.response import Response
 from django.db.models import Sum
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Product, Review
 from .serializers import ProductSerializer, ReviewSerializer
 from .permissions import IsStaffOrReadOnly
 
 
+PRODUCTS_PER_PAGE = 4
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsStaffOrReadOnly,)
+
+    def list(self, request, *args, **kwargs):
+        category = request.query_params.getlist("category")
+        print(category)
+        if category == []:
+            queryset = Product.objects.all()
+        else:
+            queryset = Product.objects.filter(category__in=category)
+
+        if len(queryset) < 1:
+            return Response(
+                {"products": "Empty queryset"},
+                status.HTTP_200_OK,
+            )
+
+        page = request.query_params.get("page")
+        paginator = Paginator(queryset, PRODUCTS_PER_PAGE)
+
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(1)
+            page = 1
+
+        if page == None or page == "":
+            page = 1
+
+        page = int(page)
+        serializer = self.serializer_class(products, many=True)
+
+        return Response(
+            {
+                "products": serializer.data,
+                "page": page,
+                "pages": paginator.num_pages,
+            }
+        )
 
 
 class ReviewCreateView(generics.CreateAPIView):

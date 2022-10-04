@@ -43,6 +43,30 @@ class ProductViewSetTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.product)
         self.assertContains(response, self.review)
+        self.assertEqual(response.data["page"], 1)
+        self.assertEqual(response.data["pages"], 1)
+
+    def test_api_list_view_with_category(self):
+        product_2 = Product.objects.create(
+            user=self.user,
+            name="Product Name2",
+            category=2,
+            description="Description",
+            rating=3.5,
+            n_reviews=5,
+            price=6.31,
+            pdf_price=3.31,
+            n_stock=0,
+        )
+
+        # filter should only contain category 1
+        response = response = self.client.get(
+            "%s?category=%s" % (reverse("products-list"), "1")
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, self.product)
+        self.assertNotContains(response, product_2)
 
     def test_api_detail_view(self):
         response = self.client.get(reverse("products-detail", kwargs={"pk": 1}))
