@@ -5,13 +5,13 @@ import { LinkContainer } from "react-router-bootstrap";
 
 import ProductModal from "./ProductModal";
 
-import "./ProductCard.css";
+import "../effects.css";
 
 const ProductCard = ({ product }) => {
   return (
     <Card className="my-3 p-3" style={{ height: "100%" }}>
       <Link to={`/product/${product.id}`}>
-        <div className="image-holder">
+        <div className="img-zoom">
           <Card.Img src={product.image} alt={product.name} />
         </div>
       </Link>

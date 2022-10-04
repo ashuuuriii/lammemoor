@@ -1,8 +1,0 @@
-.image-holder {
-  overflow: hidden;
-}
-
-div .card:hover img {
-  transform: scale(1.3);
-  transition: 1000ms;
-}
