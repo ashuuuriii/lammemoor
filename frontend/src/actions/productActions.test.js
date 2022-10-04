@@ -117,7 +117,7 @@ describe("Test getProductsList action", () => {
       },
     ];
 
-    return store.dispatch(getProductsList()).then(() => {
+    return store.dispatch(getProductsList("?page=1&category=1&category=5")).then(() => {
       const actualActions = store.getActions();
       expect(actualActions).toEqual(expectedActions);
     });
