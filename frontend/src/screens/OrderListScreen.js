@@ -97,7 +97,7 @@ const OrderListScreen = () => {
                           <Image src={item.image} alt={item.name} fluid />
                         </Col>
                         <Col xs={6} md={6}>
-                          <Link to={`/products/${item.id}`}>
+                          <Link to={`/product/${item.product}`}>
                             <p className="lead my-0">{item.name}</p>
                           </Link>
                           {item.type === "pdf" ? (
