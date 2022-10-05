@@ -1,6 +1,14 @@
 @import "./scss/config";
 @import "bootstrap/scss/bootstrap";
 
+@font-face {
+  font-family: "carringtonregular";
+  src: url("./assets/fonts/carrington-webfont.woff2") format("woff2"),
+    url("./assets/fonts/carrington-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 main {
   min-height: 95vh;
 }
@@ -32,4 +40,8 @@ main {
 
 .small-txt {
   font-size: 0.75rem;
+}
+
+.brand-font {
+  font-family: carringtonregular;
 }

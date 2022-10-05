@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Image } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { logout } from "../actions/userActions";
+
+import logo from "../assets/images/logo.png";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -41,7 +43,10 @@ const Header = () => {
       >
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>Lammermoor</Navbar.Brand>
+            <Navbar.Brand className="brand-font">
+              <Image src={logo} width="30" height="30" fluid className="mx-2" />
+              Lammermoor
+            </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
