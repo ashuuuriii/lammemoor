@@ -1,9 +1,0 @@
-/* Creates zoom in image effect on hover */
-.img-zoom {
-  overflow: hidden;
-}
-
-.img-zoom:hover img {
-  transform: scale(1.3);
-  transition: 1000ms;
-}

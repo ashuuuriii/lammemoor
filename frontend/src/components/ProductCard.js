@@ -5,8 +5,6 @@ import { LinkContainer } from "react-router-bootstrap";
 
 import ProductModal from "./ProductModal";
 
-import "../effects.css";
-
 const ProductCard = ({ product }) => {
   return (
     <Card className="my-3 p-3" style={{ height: "100%" }}>
