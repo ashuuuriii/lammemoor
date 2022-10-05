@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
             £{product.pdf_price} - £{product.price}
           </Card.Text>
         ) : (
-          <Card.Text>${product.price}</Card.Text>
+          <Card.Text>£{product.price}</Card.Text>
         )}
         {!product.pdf_price && product.n_stock < 1 ? (
           <Badge bg="danger">Currently unavailable</Badge>
