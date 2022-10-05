@@ -4,8 +4,6 @@ import { Modal, Button } from "react-bootstrap";
 import CartAdder from "./CartAdder";
 import Rating from "./Rating";
 
-import "../custom_properties.css";
-
 const ProductModal = ({ product }) => {
   const [show, setShow] = useState(false);
 

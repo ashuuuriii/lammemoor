@@ -18,7 +18,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import Loader from "../components/Loader";
 import Paginator from "../components/Paginator";
 import { getOrdersList } from "../actions/orderActions";
-import "../custom_properties.css";
 
 const OrderListScreen = () => {
   const dispatch = useDispatch();
@@ -126,7 +125,7 @@ const OrderListScreen = () => {
                             <Row>
                               <Button
                                 type="button"
-                                className="my-3"
+                                className="my-3 text-light"
                                 variant="secondary"
                               >
                                 Write a review

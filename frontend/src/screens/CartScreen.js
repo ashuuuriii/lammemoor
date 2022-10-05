@@ -82,6 +82,7 @@ const CartScreen = () => {
                       type="button"
                       onClick={() => removeItemHandler(item.product)}
                       variant="danger"
+                      className="text-light"
                     >
                       <i className="bi bi-x"></i>
                     </Button>

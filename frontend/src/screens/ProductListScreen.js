@@ -92,7 +92,7 @@ const ProductListScreen = () => {
             <Button
               type="button"
               variant="danger"
-              className="my-3"
+              className="my-3 text-light"
               onClick={handleClearButton}
             >
               Clear

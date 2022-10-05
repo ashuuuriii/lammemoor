@@ -8,8 +8,6 @@ import AddressForm from "../components/AddressForm";
 import CheckoutProgress from "../components/CheckoutProgress";
 import { getUserAddresses } from "../actions/userActions";
 
-import "../custom_properties.css";
-
 const OrderScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

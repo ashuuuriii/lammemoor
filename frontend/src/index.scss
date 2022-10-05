@@ -1,15 +1,23 @@
+@import "./scss/config";
+@import "bootstrap/scss/bootstrap";
+
+main {
+  min-height: 95vh;
+}
+
+// custom properties
 .no-wrap {
   flex-wrap: nowrap;
 }
 
 .btn-to-link {
   text-decoration: underline;
-  --bs-btn-color: var(--bs-blue);
+  --bs-btn-color: $link-color;
   --bs-btn-bg: transparent;
   --bs-btn-border-color: none;
-  --bs-btn-hover-color: var(--bs-teal);
+  --bs-btn-hover-color: shift-color($link-color, $link-shade-percentage);
   --bs-btn-hover-bg: transparent;
-  --bs-btn-active-color: var(--bs-teal);
+  --bs-btn-active-color: shift-color($link-color, $link-shade-percentage);
   --bs-btn-active-bg: transparent;
   --bs-btn-active-border-color: none;
   --bs-btn-active-shadow: none;
