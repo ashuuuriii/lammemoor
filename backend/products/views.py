@@ -17,8 +17,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (IsStaffOrReadOnly,)
 
     def list(self, request, *args, **kwargs):
+        new = request.query_params.get("new")
+        if new:
+            products = Product.objects.all().order_by("-created_at")[: int(new)]
+            serializer = self.serializer_class(products, many=True)
+            return Response(
+                {
+                    "products": serializer.data,
+                    "page": None,
+                    "pages": None,
+                }
+            )
+
         category = request.query_params.getlist("category")
-        print(category)
+
         if category == []:
             queryset = Product.objects.all()
         else:
