@@ -46,11 +46,11 @@ const OrderConfirmScreen = () => {
     }
   }, [addressFromStore, cartItems, userInfo, navigate]);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (success) {
       navigate("/order/payment/");
     }
-  }, [success, navigate])
+  }, [success, navigate]);
 
   return (
     <Container className="pt-4">
@@ -61,35 +61,35 @@ const OrderConfirmScreen = () => {
         <Col lg={7}>
           <h1>Review Your Order</h1>
           <Row className="my-3">
-            <h2>Shipping</h2>
+            <h2 className="mb-3">Shipping</h2>
             {cartItems.some((item) => item.itemType === "paper") ? (
               addressFromStore ? (
-                <div>
-                  <div>
+                <>
+                  <p>
                     <strong>Name: </strong>
                     {addressFromStore.first_name} {addressFromStore.last_name}
-                  </div>
+                  </p>
                   {addressFromStore.phone_number ? (
-                    <div>
+                    <p>
                       <strong>Phone Number: </strong>
                       {addressFromStore.phone_number}
-                    </div>
+                    </p>
                   ) : null}
-                  <div>
+                  <p>
                     <strong>Address:</strong>
-                    <div>
-                      {addressFromStore.address}, {addressFromStore.city}
-                    </div>
-                    <div>{addressFromStore.country}</div>
-                  </div>
+                    <br />
+                    {addressFromStore.address}, {addressFromStore.city}
+                    <br />
+                    {addressFromStore.country}
+                  </p>
 
                   {addressFromStore.postal_code ? (
-                    <div>
+                    <p>
                       <strong>Postal Code: </strong>
                       {addressFromStore.postal_code}
-                    </div>
+                    </p>
                   ) : null}
-                </div>
+                </>
               ) : (
                 <div>You've not provided a shipping address.</div>
               )

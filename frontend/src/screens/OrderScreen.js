@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Button, Table, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Table,
+  Form,
+} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -71,110 +79,112 @@ const OrderScreen = () => {
   }, [dispatch]);
 
   return (
-    <Row className="pt-4">
+    <Container className="pt-4">
       <CheckoutProgress step1 step2 />
-      <Col lg={7}>
-        <h1>Shipping Details</h1>
-        {cartItems.some((item) => item.itemType === "pdf") ? (
-          <p>
-            Your e-patterns will be sent to your account email after payment has
-            been confirmed.
-          </p>
-        ) : null}
-        {cartItems.some((item) => item.itemType === "paper") ? (
-          <div>
-            {showAddressBook ? (
-              <div>
-                <Button
-                  type="button"
-                  className="btn-to-link"
-                  onClick={hideAddressBook}
-                >
-                  Enter a different address
-                </Button>
-                <Form>
-                  {userAddresses.map((address) => (
-                    <Form.Check
-                      key={address.id}
-                      type="radio"
-                      id={`choice-${address.id}`}
-                      name="address-choice"
-                      onChange={() => addressSelectHandler(address.id)}
-                      checked={address.id === selectedAddress}
-                      label={`${address.first_name} ${address.last_name}, ${
-                        address.address
-                      }, ${address.city}, ${address.country}${
-                        address.postal_code ? " ," + address.postal_code : ""
-                      }`}
-                    />
-                  ))}
-                </Form>
-              </div>
-            ) : (
-              <div>
-                <Button
-                  type="button"
-                  className="btn-to-link"
-                  onClick={displayAddressBook}
-                >
-                  Choose from address book
-                </Button>
-                <AddressForm
-                  variant="new"
-                  showAddressBookToggle
-                  noSave
-                  noButton
-                />{" "}
-              </div>
-            )}
-          </div>
-        ) : null}
-      </Col>
-      <Col lg={4}>
-        <Row>
-          <Card>
-            <Card.Header>
-              <h3>Your Order</h3>
-            </Card.Header>
-            <Card.Body>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((item) => (
-                    <tr key={item.product}>
-                      <td>
-                        {item.name} -{" "}
-                        {item.itemType === "paper" ? "paper" : "e-pattern"}
-                      </td>
-                      <td>{item.itemType === "paper" ? item.qty : "-"}</td>
-                      <td>£{item.price * item.qty}</td>
+      <Row>
+        <Col lg={7}>
+          <h1>Shipping Details</h1>
+          {cartItems.some((item) => item.itemType === "pdf") ? (
+            <p>
+              Your e-patterns will be sent to your account email after payment
+              has been confirmed.
+            </p>
+          ) : null}
+          {cartItems.some((item) => item.itemType === "paper") ? (
+            <div>
+              {showAddressBook ? (
+                <div>
+                  <Button
+                    type="button"
+                    className="btn-to-link"
+                    onClick={hideAddressBook}
+                  >
+                    Enter a different address
+                  </Button>
+                  <Form>
+                    {userAddresses.map((address) => (
+                      <Form.Check
+                        key={address.id}
+                        type="radio"
+                        id={`choice-${address.id}`}
+                        name="address-choice"
+                        onChange={() => addressSelectHandler(address.id)}
+                        checked={address.id === selectedAddress}
+                        label={`${address.first_name} ${address.last_name}, ${
+                          address.address
+                        }, ${address.city}, ${address.country}${
+                          address.postal_code ? " ," + address.postal_code : ""
+                        }`}
+                      />
+                    ))}
+                  </Form>
+                </div>
+              ) : (
+                <div>
+                  <Button
+                    type="button"
+                    className="btn-to-link"
+                    onClick={displayAddressBook}
+                  >
+                    Choose from address book
+                  </Button>
+                  <AddressForm
+                    variant="new"
+                    showAddressBookToggle
+                    noSave
+                    noButton
+                  />{" "}
+                </div>
+              )}
+            </div>
+          ) : null}
+        </Col>
+        <Col lg={4}>
+          <Row>
+            <Card>
+              <Card.Header>
+                <h3>Your Order</h3>
+              </Card.Header>
+              <Card.Body>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-        </Row>
-        <Row className="pt-4">
-          <PriceCard />
-        </Row>
-        <Row>
-          <Button
-            type="submit"
-            className="my-3"
-            onClick={continueButtonHandler}
-          >
-            Continue
-          </Button>
-        </Row>
-      </Col>
-    </Row>
+                  </thead>
+                  <tbody>
+                    {cartItems.map((item) => (
+                      <tr key={item.product}>
+                        <td>
+                          {item.name} -{" "}
+                          {item.itemType === "paper" ? "paper" : "e-pattern"}
+                        </td>
+                        <td>{item.itemType === "paper" ? item.qty : "-"}</td>
+                        <td>£{item.price * item.qty}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          </Row>
+          <Row className="pt-4">
+            <PriceCard />
+          </Row>
+          <Row>
+            <Button
+              type="submit"
+              className="my-3"
+              onClick={continueButtonHandler}
+            >
+              Continue
+            </Button>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

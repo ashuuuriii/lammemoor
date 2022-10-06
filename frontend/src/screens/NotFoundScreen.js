@@ -8,7 +8,7 @@ const NotFoundScreen = () => {
       <p className="lead text-center">Not found</p>
       <div className="text-center">
         <LinkContainer to="">
-          <Button>Go home</Button>
+          <Button type="button">Go home</Button>
         </LinkContainer>
       </div>
     </Container>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Offcanvas, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Offcanvas, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const ProductListScreen = () => {
   const pageNumber = search.get("page") ? search.get("page") : "";
 
   const productList = useSelector((state) => state.productList);
-  const { products, page, pages } = productList;
+  const { products, page, pages, error } = productList;
 
   const [showCanvas, setShowCanvas] = useState(false);
   const [checkedItems, setCheckItems] = useState([]);
@@ -49,29 +49,35 @@ const ProductListScreen = () => {
   }, [dispatch, pageNumber, checkedItems]);
 
   return (
-    <div className="pt-4">
+    <Container className="pt-4">
       <h1>Shop</h1>
-      <Row>
-        <div>
-          <Button onClick={handleOpenCanvas} size="sm" variant="primary">
-            Filter
-          </Button>
-        </div>
-      </Row>
-      <Row>
-        {typeof products != "string" ? (
-          products.map((product) => (
-            <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
-              <ProductCard product={product} />
-            </Col>
-          ))
-        ) : (
-          <p className="my-3">There are no products in this category yet.</p>
-        )}
-      </Row>
-      <Row className="pt-5">
-        <Paginator path={currPath} page={page} pages={pages} arrows />
-      </Row>
+      <Button onClick={handleOpenCanvas} size="sm" variant="primary">
+        Filter
+      </Button>
+      {error ? (
+        <p className="my-3">
+          Our online store is temporarily unavailable. Please check back soon.
+        </p>
+      ) : (
+        <>
+          <Row>
+            {typeof products != "string" ? (
+              products.map((product) => (
+                <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
+                  <ProductCard product={product} />
+                </Col>
+              ))
+            ) : (
+              <p className="my-3">
+                There are no products in this category yet.
+              </p>
+            )}
+          </Row>
+          <Row className="pt-5">
+            <Paginator path={currPath} page={page} pages={pages} arrows />
+          </Row>
+        </>
+      )}
 
       <Offcanvas show={showCanvas} onHide={handleCloseCanvas}>
         <Offcanvas.Header closeButton>
@@ -100,7 +106,7 @@ const ProductListScreen = () => {
           </Form>
         </Offcanvas.Body>
       </Offcanvas>
-    </div>
+    </Container>
   );
 };
 

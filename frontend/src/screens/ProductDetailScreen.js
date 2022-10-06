@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Container,
   Row,
   Col,
   Image,
@@ -63,20 +64,20 @@ const ProductDetailScreen = () => {
   }, [dispatch, productId]);
 
   return (
-    <div className="pt-4">
+    <Container className="pt-4">
       <Button onClick={() => navigate(-1)}>Go back</Button>
       {loading ? (
         <Loader />
       ) : error ? (
-        <div className="mt-3">
+        <Row className="mt-3">
           <h1>{error}</h1>
-          <div>
+          <p>
             Sorry, an error has occurred. We'll get this fixed as soon as
             possible.
-          </div>
-        </div>
+          </p>
+        </Row>
       ) : (
-        <div className="my-3">
+        <Row className="my-3">
           <h1 className="d-lg-none d-md-block">{product.name}</h1>
           <Row>
             <Col md={12} lg={6} className="my-3">
@@ -188,9 +189,9 @@ const ProductDetailScreen = () => {
               </ListGroup.Item>
             </ListGroup>
           </Row>
-        </div>
+        </Row>
       )}
-    </div>
+    </Container>
   );
 };
 

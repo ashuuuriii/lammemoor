@@ -239,26 +239,29 @@ const ManageAccountScreen = () => {
                       key={address.id}
                     >
                       <ListGroup.Item action>
-                        <div>
+                        <p>
                           <strong>Name: </strong>
                           {address.first_name} {address.last_name}
-                        </div>
+                        </p>
                         {address.phone_number ? (
-                          <div>
+                          <p>
                             <strong>Phone Number: </strong>
                             {address.phone_number}
-                          </div>
+                          </p>
                         ) : null}
-                        <div>
+                        <p>
                           <strong>Address:</strong>
-                          <div>
-                            {address.address}, {address.city}
-                          </div>
-                          <div>{address.country}</div>
-                        </div>
+                          <br />
+                          {address.address}, {address.city}
+                          <br />
+                          {address.country}
+                        </p>
 
                         {address.postal_code ? (
-                          <div><strong>Postal Code: </strong>{address.postal_code}</div>
+                          <p>
+                            <strong>Postal Code: </strong>
+                            {address.postal_code}
+                          </p>
                         ) : null}
                       </ListGroup.Item>
                     </LinkContainer>

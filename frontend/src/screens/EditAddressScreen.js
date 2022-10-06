@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -43,7 +43,7 @@ const EditAddressScreen = () => {
   }, [removeSuccess, navigate]);
 
   return (
-    <div className="pt-4">
+    <Container className="pt-4">
       <Button className="my-3 d-none d-lg-block" onClick={() => navigate(-1)}>
         Go back
       </Button>
@@ -59,7 +59,7 @@ const EditAddressScreen = () => {
           Remove from address book
         </Button>
       </FormContainer>
-    </div>
+    </Container>
   );
 };
 
