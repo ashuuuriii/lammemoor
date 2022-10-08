@@ -43,10 +43,10 @@ function App() {
               path="/accounts/password_reset/reset"
               element={<PasswordResetTokenScreen />}
             />
-            <Route path="accounts/manage/" element={<ManageAccountScreen />} />
-            <Route path="accounts/orders/:id" element={<OrderDetailScreen />} />
-            <Route path="accounts/orders/" element={<OrderListScreen />} />
-            <Route path="edit_address/:id" element={<EditAddressScreen />} />
+            <Route path="/accounts/manage/" element={<ManageAccountScreen />} />
+            <Route path="/accounts/orders/:id" element={<OrderDetailScreen />} />
+            <Route path="/accounts/orders/" element={<OrderListScreen />} />
+            <Route path="/edit_address/:id" element={<EditAddressScreen />} />
             <Route path="/shop/" element={<ProductListScreen />} />
             <Route path="/product/:id" element={<ProductDetailScreen />} />
             <Route path="/cart/" element={<CartScreen />} />
