@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const FadeInScroll = (props) => {
-  const [isVisible, setVisible] = React.useState(true);
+  const [isVisible, setVisible] = useState(true);
   const domRef = useRef();
 
   useEffect(() => {
@@ -9,6 +9,7 @@ const FadeInScroll = (props) => {
       entries.forEach((entry) => setVisible(entry.isIntersecting));
     });
     observer.observe(domRef.current);
+
     return () => observer.disconnect();
   }, []);
 
