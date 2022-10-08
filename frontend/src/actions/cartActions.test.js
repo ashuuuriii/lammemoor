@@ -86,16 +86,17 @@ describe("Test removeFromCart action", () => {
 
   it("item is removed", () => {
     const expectedId = 1;
+    const expectedItemType = "type";
     jest.spyOn(window.localStorage.__proto__, "setItem");
 
     const expectedActions = [
       {
         type: CART_REMOVE_ITEM,
-        payload: expectedId,
+        payload: {id: expectedId, itemType: expectedItemType},
       },
     ];
 
-    store.dispatch(removeFromCart(1));
+    store.dispatch(removeFromCart(1, "type"));
     const actualActions = store.getActions();
     expect(actualActions).toEqual(expectedActions);
     expect(localStorage.setItem).toHaveBeenCalledWith(

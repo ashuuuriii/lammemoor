@@ -86,7 +86,7 @@ describe("Test cartReducer", () => {
     });
     const reducer = cartReducer(state, {
       type: CART_REMOVE_ITEM,
-      payload: newItem,
+      payload: {id: newItem.product, itemType: newItem.itemType},
     });
     expect(reducer).toEqual(expectedState);
   });

@@ -34,8 +34,8 @@ const CartScreen = () => {
     }
   };
 
-  const removeItemHandler = (id) => {
-    dispatch(removeFromCart(id));
+  const removeItemHandler = (id, itemType) => {
+    dispatch(removeFromCart(id, itemType));
   };
 
   return (
@@ -91,7 +91,7 @@ const CartScreen = () => {
                     <Col md={1}>
                       <Button
                         type="button"
-                        onClick={() => removeItemHandler(item.product)}
+                        onClick={() => removeItemHandler(item.product, item.itemType)}
                         variant="danger"
                         className="text-light"
                       >
