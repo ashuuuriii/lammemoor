@@ -48,9 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party apps
     'rest_framework',
-    "corsheaders",
-    "django_rest_passwordreset",
-    "phonenumber_field",
+    'corsheaders',
+    'django_rest_passwordreset',
+    'phonenumber_field',
+    'drf_spectacular',
     # local apps
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
@@ -150,7 +151,14 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Lammormoor Demo Project",
+    "DESCRIPTION": "E-commerce site demo project.",
+    "VERSION": "1.0.0",
 }
 
 # set access tokens to expire
@@ -166,7 +174,12 @@ CORS_ALLOWED_ORIGINS = (
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
 
 STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET")
