@@ -18,10 +18,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", TemplateView.as_view(template_name="index.html")),
     path("api/accounts/", include("accounts.urls")),
     path(
         "api/accounts/password_reset/",
