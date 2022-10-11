@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { Helmet } from "react-helmet-async";
 
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -32,27 +33,32 @@ const PaymentScreen = () => {
   }, [dispatch, order]);
 
   return (
-    <Container className="pt-4">
-      {loading && <Loader />}
-      {error && <Message variant="danger">{error}</Message>}
-      {clientSecret && (
-        <Row>
-          <CheckoutProgress step1 step2 step3 step4 />
-          <Col lg={7}>
-            <Elements
-              stripe={stripePromise}
-              options={{ clientSecret, appearance }}
-            >
-              <h1>Payment</h1>
-              <StripePaymentForm />
-            </Elements>
-          </Col>
-          <Col lg={4}>
-            <PriceCard orderObj={order} />
-          </Col>
-        </Row>
-      )}
-    </Container>
+    <>
+      <Helmet>
+        <title>Payment</title>
+      </Helmet>
+      <Container className="pt-4">
+        {loading && <Loader />}
+        {error && <Message variant="danger">{error}</Message>}
+        {clientSecret && (
+          <Row>
+            <CheckoutProgress step1 step2 step3 step4 />
+            <Col lg={7}>
+              <Elements
+                stripe={stripePromise}
+                options={{ clientSecret, appearance }}
+              >
+                <h1>Payment</h1>
+                <StripePaymentForm />
+              </Elements>
+            </Col>
+            <Col lg={4}>
+              <PriceCard orderObj={order} />
+            </Col>
+          </Row>
+        )}
+      </Container>
+    </>
   );
 };
 

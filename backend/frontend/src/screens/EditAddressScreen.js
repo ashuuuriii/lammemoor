@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Container, Button } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import FormContainer from "../components/FormContainer";
 import AddressForm from "../components/AddressForm";
@@ -43,23 +44,32 @@ const EditAddressScreen = () => {
   }, [removeSuccess, navigate]);
 
   return (
-    <Container className="pt-4">
-      <Button className="my-3 d-none d-lg-block" onClick={() => navigate(-1)}>
-        Go back
-      </Button>
-      <FormContainer>
-        <h1>Edit</h1>
-        {loading && <Loader />}
-        {error && <Message variant="danger">{error}</Message>}
-        {success && (
-          <Message variant="success">Your address has been updated.</Message>
-        )}
-        <AddressForm variant="update" />
-        <Button variant="danger" className="my-3" onClick={removeButtonHandler}>
-          Remove from address book
+    <>
+      <Helmet>
+        <title>Edit Address</title>
+      </Helmet>
+      <Container className="pt-4">
+        <Button className="my-3 d-none d-lg-block" onClick={() => navigate(-1)}>
+          Go back
         </Button>
-      </FormContainer>
-    </Container>
+        <FormContainer>
+          <h1>Edit</h1>
+          {loading && <Loader />}
+          {error && <Message variant="danger">{error}</Message>}
+          {success && (
+            <Message variant="success">Your address has been updated.</Message>
+          )}
+          <AddressForm variant="update" />
+          <Button
+            variant="danger"
+            className="my-3"
+            onClick={removeButtonHandler}
+          >
+            Remove from address book
+          </Button>
+        </FormContainer>
+      </Container>
+    </>
   );
 };
 

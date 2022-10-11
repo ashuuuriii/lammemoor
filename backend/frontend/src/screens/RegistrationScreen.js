@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
@@ -70,90 +71,95 @@ const RegistrationScreen = () => {
   }, [navigate, userInfoRegistered, redirect]);
 
   return (
-    <FormContainer>
-      <h1>Register</h1>
-      {message && <Message variant="danger">{message}</Message>}
-      {error && <Message variant="danger">{error}</Message>}
-      <Form onSubmit={submitHandler}>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="firstName">
-              <Form.Label>First Name</Form.Label>
+    <>
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
+      <FormContainer>
+        <h1>Register</h1>
+        {message && <Message variant="danger">{message}</Message>}
+        {error && <Message variant="danger">{error}</Message>}
+        <Form onSubmit={submitHandler}>
+          <Row>
+            <Col md={6}>
+              <Form.Group controlId="firstName">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  required
+                  type="name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+
+            <Col md={6}>
+              <Form.Group controlId="lastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  required
+                  type="name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Form.Group controlId="email">
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="password">
+            <Form.Label>Password</Form.Label>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>
+                  Please include at least one digit, one uppercase letter, at
+                  least 8 characters
+                </Tooltip>
+              }
+            >
               <Form.Control
                 required
-                type="name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
-            </Form.Group>
-          </Col>
+            </OverlayTrigger>
+          </Form.Group>
 
-          <Col md={6}>
-            <Form.Group controlId="lastName">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                required
-                type="name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Form.Group controlId="email">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="password">
-          <Form.Label>Password</Form.Label>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={
-              <Tooltip>
-                Please include at least one digit, one uppercase letter, at
-                least 8 characters
-              </Tooltip>
-            }
-          >
+          <Form.Group controlId="passwordConfirm">
+            <Form.Label>Confirm Password</Form.Label>
             <Form.Control
               required
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
-          </OverlayTrigger>
-        </Form.Group>
-
-        <Form.Group controlId="passwordConfirm">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            required
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-        <Button
-          type="submit"
-          variant="primary"
-          className="my-3 btn d-none d-lg-block"
-        >
-          Register
-        </Button>
-        <Row className="d-lg-none d-block mx-0">
-          <Button type="submit" variant="primary" className="my-3">
+          </Form.Group>
+          <Button
+            type="submit"
+            variant="primary"
+            className="my-3 btn d-none d-lg-block"
+          >
             Register
           </Button>
-        </Row>
-      </Form>
-    </FormContainer>
+          <Row className="d-lg-none d-block mx-0">
+            <Button type="submit" variant="primary" className="my-3">
+              Register
+            </Button>
+          </Row>
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 

@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
+import { Helmet } from "react-helmet-async";
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -97,182 +98,187 @@ const ManageAccountScreen = () => {
   }, [dispatch]);
 
   return (
-    <Container className="pt-4">
-      <h1>Your Account</h1>
-      <p className="lead">Welcome back, {userInfo.first_name}.</p>
-      <Row>
-        <Col md={4}>
-          <h2>Edit User</h2>
-          {message && <Message variant="danger">{message}</Message>}
-          {error && <Message variant="danger">{error}</Message>}
-          {success && (
-            <Message variant="success">
-              Your user details have been updated.
-            </Message>
-          )}
-          {loading && <Loader />}
-          <Form onSubmit={submitHandler}>
-            <Accordion defaultActiveKey="0">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Update Name</Accordion.Header>
-                <Accordion.Body>
-                  <Form.Group controlId="firstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                      required
-                      type="name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    ></Form.Control>
-                  </Form.Group>
+    <>
+      <Helmet>
+        <title>Manage Account</title>
+      </Helmet>
+      <Container className="pt-4">
+        <h1>Your Account</h1>
+        <p className="lead">Welcome back, {userInfo.first_name}.</p>
+        <Row>
+          <Col md={4}>
+            <h2>Edit User</h2>
+            {message && <Message variant="danger">{message}</Message>}
+            {error && <Message variant="danger">{error}</Message>}
+            {success && (
+              <Message variant="success">
+                Your user details have been updated.
+              </Message>
+            )}
+            {loading && <Loader />}
+            <Form onSubmit={submitHandler}>
+              <Accordion defaultActiveKey="0">
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>Update Name</Accordion.Header>
+                  <Accordion.Body>
+                    <Form.Group controlId="firstName">
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Control
+                        required
+                        type="name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      ></Form.Control>
+                    </Form.Group>
 
-                  <Form.Group controlId="lastName">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                      required
-                      type="name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    ></Form.Control>
-                  </Form.Group>
-                </Accordion.Body>
-              </Accordion.Item>
+                    <Form.Group controlId="lastName">
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control
+                        required
+                        type="name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      ></Form.Control>
+                    </Form.Group>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>Update Email</Accordion.Header>
-                <Accordion.Body>
-                  <Form.Group controlId="email">
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control
-                      required
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    ></Form.Control>
-                  </Form.Group>
-                </Accordion.Body>
-              </Accordion.Item>
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>Update Email</Accordion.Header>
+                  <Accordion.Body>
+                    <Form.Group controlId="email">
+                      <Form.Label>Email Address</Form.Label>
+                      <Form.Control
+                        required
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      ></Form.Control>
+                    </Form.Group>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-              <Accordion.Item eventKey="2">
-                <Accordion.Header>Update Password</Accordion.Header>
-                <Accordion.Body>
-                  <Form.Group controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip>
-                          Please include at least one digit, one uppercase
-                          letter, at least 8 characters
-                        </Tooltip>
-                      }
-                    >
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Update Password</Accordion.Header>
+                  <Accordion.Body>
+                    <Form.Group controlId="password">
+                      <Form.Label>Password</Form.Label>
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Tooltip>
+                            Please include at least one digit, one uppercase
+                            letter, at least 8 characters
+                          </Tooltip>
+                        }
+                      >
+                        <Form.Control
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        ></Form.Control>
+                      </OverlayTrigger>
+                    </Form.Group>
+
+                    <Form.Group controlId="passwordConfirm">
+                      <Form.Label>Confirm Password</Form.Label>
                       <Form.Control
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       ></Form.Control>
-                    </OverlayTrigger>
-                  </Form.Group>
+                    </Form.Group>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
 
-                  <Form.Group controlId="passwordConfirm">
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                    ></Form.Control>
-                  </Form.Group>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-
-            <Button
-              type="submit"
-              variant="primary"
-              className="my-3 btn d-none d-lg-block"
-            >
-              Update
-            </Button>
-            <Row className="d-lg-none d-block mx-0">
-              <Button type="submit" variant="primary" className="my-3">
+              <Button
+                type="submit"
+                variant="primary"
+                className="my-3 btn d-none d-lg-block"
+              >
                 Update
               </Button>
-            </Row>
-          </Form>
-        </Col>
-        <Col md={8}>
-          <h2>Address Book</h2>
-          <Button
-            type="button"
-            className="mb-3 btn d-none d-lg-block"
-            onClick={handleShow}
-          >
-            Add Address
-          </Button>
-          <Row className="d-lg-none d-block mx-0">
-            <Button type="button" className="mb-3" onClick={handleShow}>
+              <Row className="d-lg-none d-block mx-0">
+                <Button type="submit" variant="primary" className="my-3">
+                  Update
+                </Button>
+              </Row>
+            </Form>
+          </Col>
+          <Col md={8}>
+            <h2>Address Book</h2>
+            <Button
+              type="button"
+              className="mb-3 btn d-none d-lg-block"
+              onClick={handleShow}
+            >
               Add Address
             </Button>
-          </Row>
+            <Row className="d-lg-none d-block mx-0">
+              <Button type="button" className="mb-3" onClick={handleShow}>
+                Add Address
+              </Button>
+            </Row>
 
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add Address</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <AddressForm variant="new" />
-            </Modal.Body>
-          </Modal>
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Address</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <AddressForm variant="new" />
+              </Modal.Body>
+            </Modal>
 
-          <Row>
-            {addressLoading ? (
-              <Loader />
-            ) : addressError ? (
-              <Message variant="danger">{addressError}</Message>
-            ) : (
-              <ListGroup className="mx-2">
-                {userAddresses.map((address) => {
-                  return address.in_address_book ? (
-                    <LinkContainer
-                      to={`/edit_address/${address.id}`}
-                      key={address.id}
-                    >
-                      <ListGroup.Item action>
-                        <p>
-                          <strong>Name: </strong>
-                          {address.first_name} {address.last_name}
-                        </p>
-                        {address.phone_number ? (
+            <Row>
+              {addressLoading ? (
+                <Loader />
+              ) : addressError ? (
+                <Message variant="danger">{addressError}</Message>
+              ) : (
+                <ListGroup className="mx-2">
+                  {userAddresses.map((address) => {
+                    return address.in_address_book ? (
+                      <LinkContainer
+                        to={`/edit_address/${address.id}`}
+                        key={address.id}
+                      >
+                        <ListGroup.Item action>
                           <p>
-                            <strong>Phone Number: </strong>
-                            {address.phone_number}
+                            <strong>Name: </strong>
+                            {address.first_name} {address.last_name}
                           </p>
-                        ) : null}
-                        <p>
-                          <strong>Address:</strong>
-                          <br />
-                          {address.address}, {address.city}
-                          <br />
-                          {address.country}
-                        </p>
-
-                        {address.postal_code ? (
+                          {address.phone_number ? (
+                            <p>
+                              <strong>Phone Number: </strong>
+                              {address.phone_number}
+                            </p>
+                          ) : null}
                           <p>
-                            <strong>Postal Code: </strong>
-                            {address.postal_code}
+                            <strong>Address:</strong>
+                            <br />
+                            {address.address}, {address.city}
+                            <br />
+                            {address.country}
                           </p>
-                        ) : null}
-                      </ListGroup.Item>
-                    </LinkContainer>
-                  ) : null;
-                })}
-              </ListGroup>
-            )}
-          </Row>
-        </Col>
-      </Row>
-    </Container>
+
+                          {address.postal_code ? (
+                            <p>
+                              <strong>Postal Code: </strong>
+                              {address.postal_code}
+                            </p>
+                          ) : null}
+                        </ListGroup.Item>
+                      </LinkContainer>
+                    ) : null;
+                  })}
+                </ListGroup>
+              )}
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 

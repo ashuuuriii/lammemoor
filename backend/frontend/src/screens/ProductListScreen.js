@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Offcanvas, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 import { getProductsList } from "../actions/productActions";
 import ProductCard from "../components/ProductCard";
@@ -49,64 +50,69 @@ const ProductListScreen = () => {
   }, [dispatch, pageNumber, checkedItems]);
 
   return (
-    <Container className="pt-4">
-      <h1>Shop</h1>
-      <Button onClick={handleOpenCanvas} size="sm" variant="primary">
-        Filter
-      </Button>
-      {error ? (
-        <p className="my-3">
-          Our online store is temporarily unavailable. Please check back soon.
-        </p>
-      ) : (
-        <>
-          <Row>
-            {typeof products != "string" ? (
-              products.map((product) => (
-                <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
-                  <ProductCard product={product} />
-                </Col>
-              ))
-            ) : (
-              <p className="my-3">
-                There are no products in this category yet.
-              </p>
-            )}
-          </Row>
-          <Row className="pt-5">
-            <Paginator path={currPath} page={page} pages={pages} arrows />
-          </Row>
-        </>
-      )}
+    <>
+      <Helmet>
+        <title>Shop</title>
+      </Helmet>
+      <Container className="pt-4">
+        <h1>Shop</h1>
+        <Button onClick={handleOpenCanvas} size="sm" variant="primary">
+          Filter
+        </Button>
+        {error ? (
+          <p className="my-3">
+            Our online store is temporarily unavailable. Please check back soon.
+          </p>
+        ) : (
+          <>
+            <Row>
+              {typeof products != "string" ? (
+                products.map((product) => (
+                  <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
+                    <ProductCard product={product} />
+                  </Col>
+                ))
+              ) : (
+                <p className="my-3">
+                  There are no products in this category yet.
+                </p>
+              )}
+            </Row>
+            <Row className="pt-5">
+              <Paginator path={currPath} page={page} pages={pages} arrows />
+            </Row>
+          </>
+        )}
 
-      <Offcanvas show={showCanvas} onHide={handleCloseCanvas}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Filter</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Form>
-            {Object.keys(PRODUCT_CATEGORIES).map((cat) => (
-              <Form.Check
-                type="checkbox"
-                id={cat}
-                key={cat}
-                label={cat}
-                checked={checkedItems.indexOf(PRODUCT_CATEGORIES[cat]) >= 0}
-                onChange={handleFilteredItems}
-              />
-            ))}
-            <Button
-              type="button"
-              variant="danger"
-              className="my-3 text-light"
-              onClick={handleClearButton}
-            >
-              Clear
-            </Button>
-          </Form>
-        </Offcanvas.Body>
-      </Offcanvas>
-    </Container>
+        <Offcanvas show={showCanvas} onHide={handleCloseCanvas}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Filter</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Form>
+              {Object.keys(PRODUCT_CATEGORIES).map((cat) => (
+                <Form.Check
+                  type="checkbox"
+                  id={cat}
+                  key={cat}
+                  label={cat}
+                  checked={checkedItems.indexOf(PRODUCT_CATEGORIES[cat]) >= 0}
+                  onChange={handleFilteredItems}
+                />
+              ))}
+              <Button
+                type="button"
+                variant="danger"
+                className="my-3 text-light"
+                onClick={handleClearButton}
+              >
+                Clear
+              </Button>
+            </Form>
+          </Offcanvas.Body>
+        </Offcanvas>
+      </Container>
+    </>
   );
 };
 
