@@ -3,8 +3,8 @@ import { Form, Button, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import Message from "../components/Message";
-import Loader from "../components/Loader";
+import Message from "./Message";
+import Loader from "./Loader";
 import {
   addNewAddress,
   getUserAddressDetail,
