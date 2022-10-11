@@ -92,7 +92,7 @@ class ProductViewSetTest(TestCase):
         self.assertNotContains(response, self.product)
 
     def test_api_detail_view(self):
-        response = self.client.get(reverse("products-detail", kwargs={"pk": 1}))
+        response = self.client.get(reverse("products-detail", kwargs={"pk": self.product.pk}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, self.product)

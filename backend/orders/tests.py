@@ -70,7 +70,7 @@ class OrderViewSetTest(TestCase):
     def test_create_order_with_address_book(self):
         order = {
             "shipping_address": {
-                "id": 1,
+                "id": self.shipping_address.pk,
                 "first_name": "First",
                 "last_name": "Last",
                 "address": "street",
@@ -115,13 +115,15 @@ class OrderViewSetTest(TestCase):
 
         # product1 quantity should not be changed because of item type
         # product2's quantity needs to be reduced based on order amount
+        print(Product.objects.all()[1].pk)
+        print(Product.objects.all()[2].pk)
         self.assertEqual(Product.objects.all()[0].n_stock, 1)
         self.assertEqual(Product.objects.all()[1].n_stock, 3)
 
     def test_prices_with_shipping(self):
         order = {
             "shipping_address": {
-                "id": 1,
+                "id": self.shipping_address.pk,
                 "first_name": "First",
                 "last_name": "Last",
                 "address": "street",
@@ -164,7 +166,7 @@ class OrderViewSetTest(TestCase):
     def test_prices_no_shipping_over_free_shipping_cutoff(self):
         order = {
             "shipping_address": {
-                "id": 1,
+                "id": self.shipping_address.pk,
                 "first_name": "First",
                 "last_name": "Last",
                 "address": "street",
@@ -215,7 +217,7 @@ class OrderViewSetTest(TestCase):
     def test_prices_no_shipping_pdf_only(self):
         order = {
             "shipping_address": {
-                "id": 1,
+                "id": self.shipping_address.pk,
                 "first_name": "First",
                 "last_name": "Last",
                 "address": "street",
@@ -473,12 +475,12 @@ class OrderViewSetTest(TestCase):
         )
 
         # test anon user
-        response = self.client.get(reverse("orders-detail", kwargs={"pk": 1}))
+        response = self.client.get(reverse("orders-detail", kwargs={"pk": order.pk}))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # test order creator
         self.client.force_authenticate(self.user)
-        response = self.client.get(reverse("orders-detail", kwargs={"pk": 1}))
+        response = self.client.get(reverse("orders-detail", kwargs={"pk": order.pk}))
         data = response.data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
