@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'phonenumber_field',
     'drf_spectacular',
+    'storages',
     # local apps
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
@@ -105,7 +106,6 @@ DATABASES = {
         'PORT': env.str('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -198,3 +198,12 @@ CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND")
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_ACCEPT_CONTENT = ["pickle"]
+
+# django-storages settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STARICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY_ID")
+AWS_S3_SECRET_ACCESS_KEY = env.str("S3_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = env.str("S3_BUCKET_NAME")
+AWS_S3_REGION_NAME=env.str("S3_REGION_NAME")
+AWS_S3_SIGNATURE_VERSION= env.str("S3_SIGNATURE_VERSION")
