@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = ["pdf", "price_id", "pdf_price_id", "user"]
+        exclude = ["pdf", "user"]
 
     def get_reviews(self, obj):
         items = obj.review_set.all()

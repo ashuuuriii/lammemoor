@@ -27,9 +27,7 @@ class Product(models.Model):
     )
     n_stock = models.IntegerField(null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    price_id = models.CharField(max_length=255, null=True, blank=True)
-    pdf_price_id = models.CharField(max_length=255, null=True, blank=True)
-
+    
     def __str__(self):
         return str(self.name) or ""
 
