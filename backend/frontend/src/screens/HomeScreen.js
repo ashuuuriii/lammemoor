@@ -59,14 +59,14 @@ const HomeScreen = () => {
             width="30"
             height="30"
             fill="currentColor"
-            class="bi bi-caret-down-fill"
+            className="bi bi-caret-down-fill"
             viewBox="0 0 16 16"
           >
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
           </svg>
         </Row>
         <FadeInScroll>
-          <Row style={{ "margin-top": "10vh" }}>
+          <Row style={{ marginTop: "10vh" }}>
             <div className="text-center">
               <Image src={line} width="100" fluid className="my-5" />
               <h2>Welcome to Lammermoor</h2>
@@ -87,7 +87,7 @@ const HomeScreen = () => {
             <h2>New Patterns</h2>
             <Carousel>
               {products.map((product) => (
-                <Carousel.Item className="my-3">
+                <Carousel.Item className="my-3" key={product.id}>
                   <Row className="justify-content-center align-items-center">
                     <Col
                       className="text-center d-md-block"

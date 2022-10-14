@@ -66,7 +66,7 @@ const PaymentConfirmScreen = () => {
                       width="60"
                       height="60"
                       fill="currentColor"
-                      class="bi bi-x-circle text-danger d-none d-md-block"
+                      className="bi bi-x-circle text-danger d-none d-md-block"
                       viewBox="0 0 16 16"
                     >
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -75,7 +75,7 @@ const PaymentConfirmScreen = () => {
                   </Row>
                   <Row>
                     <h2 className="text-center text-danger my-3">
-                      <i class="bi bi-x-circle d-md-none text-danger"></i>{" "}
+                      <i className="bi bi-x-circle d-md-none text-danger"></i>{" "}
                       Payment Failed
                     </h2>
                   </Row>
