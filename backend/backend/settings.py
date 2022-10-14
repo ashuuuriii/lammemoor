@@ -20,7 +20,7 @@ env = Env()
 env.read_env()
 
 # Front-end base URL, used when sending links to end user. Needs to be domain name when deploying.
-FRONT_END_BASE_URL = "http://localhost:3000/"
+FRONT_END_BASE_URL = env.str("FRONT_END_BASE_URL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,9 +33,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition
@@ -179,14 +179,6 @@ SPECTACULAR_SETTINGS = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
 }
-
-# TODO: reset before deploy
-CORS_ALLOWED_ORIGINS = (
-"http://localhost:3000",
-"http://localhost:8000",
-)
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env.str("EMAIL_HOST")
