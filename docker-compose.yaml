@@ -3,11 +3,13 @@ services:
   backend:
     restart: always
     container_name: back
-    command: gunicorn --bind 0.0.0.0:8000 backend.wsgi
+    command: gunicorn --bind 0.0.0.0:8000 backend.wsgi --workers=4
     env_file: ./backend/.env
     build:
       context: ./backend/
       dockerfile: Dockerfile
+    volumes:
+      - static_volume:/app/backend/staticfiles
     ports:
       - "8000:8000"
     networks:
@@ -19,7 +21,7 @@ services:
     build: nginx
     restart: always
     volumes:
-      - static_volume:/backend/staticfiles
+      - static_volume:/app/backend/staticfiles
     ports:
       - "80:80"
     depends_on:
